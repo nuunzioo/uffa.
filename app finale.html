@@ -328,6 +328,7 @@ const Assistant={
   async reply(history){
     const raw=history[history.length-1].text;
     await wait(700+Math.min(1400,raw.length*12));
+    if(raw==='Consigliami una canzone'){const sp=songPick();if(sp)return sp}
     if(MOCK[raw])return MOCK[raw];
     const t=norm(raw);
     for(const x of INT)if(x.k.test(t))return x.r();
@@ -342,7 +343,7 @@ const CHAT=(()=>{try{return JSON.parse(localStorage.getItem('uffa_chat')||'[]')}
 const saveChat=()=>{try{localStorage.setItem('uffa_chat',JSON.stringify(CHAT.slice(-80)))}catch(e){}};
 let busy=false;
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const actHTML=a=>(a&&a.length)?`<div class="chips w">${a.map(([l,to])=>to.startsWith('tel:')?`<a class="chip" href="${to}">${esc(l)}</a>`:to[0]==='!'?`<button class="chip" data-act="${to.slice(1)}">${esc(l)}</button>`:`<button class="chip" data-go="${to}">${esc(l)}</button>`).join('')}</div>`:'';
+const actHTML=a=>(a&&a.length)?`<div class="chips w">${a.map(([l,to])=>to.startsWith('tel:')?`<a class="chip" href="${esc(to)}">${esc(l)}</a>`:to.startsWith('https://')?`<a class="chip" href="${esc(to)}" target="_blank" rel="noopener">${esc(l)}</a>`:to[0]==='!'?`<button class="chip" data-act="${to.slice(1)}">${esc(l)}</button>`:`<button class="chip" data-go="${to}">${esc(l)}</button>`).join('')}</div>`:'';
 const msgHTML=m=>`<div class="b ${m.role==='user'?'u':'a'}">${esc(m.text)}${m.role==='user'?'':actHTML(m.acts)}</div>`;
 function push(h){const m=$('.msgs');if(!m)return null;m.insertAdjacentHTML('beforeend',h);m.scrollTo({top:m.scrollHeight,behavior:K()<.1?'auto':'smooth'});return m.lastElementChild}
 async function send(text){
@@ -422,14 +423,24 @@ let GI=0,SI=0;
 /* ============ TI PENSO — segnali ============ */
 const SIG=[['💭','Ti penso'],['🤍','Sono qui'],['🫶','Un abbraccio'],['👀','Guardami un secondo'],['','Ho bisogno di te']];
 /* ============ INSIEME ============ */
-function initDraw(el){const c=el.querySelector('#cv'),x=c.getContext('2d'),r0=c.getBoundingClientRect(),dp=devicePixelRatio||1;
-  c.width=r0.width*dp;c.height=r0.height*dp;x.scale(dp,dp);x.lineCap='round';x.lineWidth=3;let col='--tx',dr=0,l;
-  const pt=e=>{const r=c.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
-  c.onpointerdown=e=>{dr=1;l=pt(e);c.setPointerCapture(e.pointerId);x.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue(col).trim();x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(l[0]+.1,l[1]);x.stroke()};
-  c.onpointermove=e=>{if(!dr)return;const p=pt(e);x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(p[0],p[1]);x.stroke();l=p};
+function initDraw(el){const c=el.querySelector('#cv'),x=c.getContext('2d'),r0=c.getBoundingClientRect(),dp=devicePixelRatio||1,W=r0.width||1,H=r0.height||1;
+  c.width=W*dp;c.height=H*dp;x.scale(dp,dp);x.lineCap='round';x.lineWidth=3;let col='--tx',dr=0,l,ch=null,buf=[];
+  const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const seg=(a,b,cv)=>{x.strokeStyle=css(cv);x.beginPath();x.moveTo(a[0]*W,a[1]*H);x.lineTo(b[0]*W,b[1]*H);x.stroke()};
+  const pt=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)/W,(e.clientY-r.top)/H]};
+  const wipe=()=>x.clearRect(0,0,W,H);
+  /* coordinate da 0 a 1: il disegno si adatta allo schermo dell'altro telefono */
+  if(paired()){try{ch=sb.channel('disegno-'+AUTH.couple.id,{config:{broadcast:{self:false}}});
+    ch.on('broadcast',{event:'s'},m=>{const q=m&&m.payload;(q&&q.s||[]).forEach(z=>seg(z[0],z[1],z[2]))})
+      .on('broadcast',{event:'clr'},()=>wipe()).subscribe()}catch(e){ch=null}}
+  const add=(a,b)=>{seg(a,b,col);if(ch)buf.push([a.map(v=>+v.toFixed(4)),b.map(v=>+v.toFixed(4)),col])};
+  const iv=setInterval(()=>{if(!el.isConnected){clearInterval(iv);if(ch){try{sb.removeChannel(ch)}catch(e){}ch=null}return}
+    if(ch&&buf.length){const z=buf.splice(0,150);try{ch.send({type:'broadcast',event:'s',payload:{s:z}})}catch(e){}}},80);
+  c.onpointerdown=e=>{dr=1;l=pt(e);try{c.setPointerCapture(e.pointerId)}catch(_){}add(l,[l[0]+.0005,l[1]])};
+  c.onpointermove=e=>{if(!dr)return;const q=pt(e);add(l,q);l=q};
   c.onpointerup=c.onpointercancel=()=>dr=0;
   el.querySelectorAll('[data-col]').forEach(b=>b.onclick=()=>{col=b.dataset.col;el.querySelectorAll('[data-col]').forEach(z=>z.classList.toggle('on',z===b))});
-  el.querySelector('#clr').onclick=()=>x.clearRect(0,0,c.width,c.height)}
+  el.querySelector('#clr').onclick=()=>{wipe();buf=[];if(ch){try{ch.send({type:'broadcast',event:'clr',payload:{}})}catch(e){}}}}
 function initQui(el){const t=el.querySelector('#qt');let f=0;const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);t.textContent=(f=!f)?'Espira.':'Inspira.'},3500*Math.max(K(),.6));t.textContent='Inspira.'}
 /* ============ RELAX ============ */
 const RLX=()=>[['Respira','Un minuto, solo il respiro.','respira'],['Ascolta qualcosa','Vai alla musica.','musica'],['Guarda','Niente da fare, solo guardare.','guarda'],['Scrivi e lascia andare','Scrivi, poi lascialo andare. Non resta niente.','lascia'],['Aprimi quando…','Lettere da aprire nel momento giusto.','lettere']];
@@ -442,7 +453,7 @@ function letGo(){const ta=$('#lt'),tx=((ta&&ta.value)||'').trim();if(!tx)return 
 function needSheet(){
   if(!paired())return sheet(`<p style="font:1.8rem var(--serif);margin:0 0 .5rem">Ho bisogno di te.</p><p class="mu" style="margin:0;line-height:1.5">Quando sarete collegati in Tu → Account, da qui partirà un segnale per ${esc(other())}. Per ora non parte.</p>`);
   sheet(`<p style="font:1.8rem var(--serif);margin:0 0 .5rem">Ho bisogno di te.</p><p class="mu" style="margin:0 0 1rem">Arriverà a ${esc(other())}. Nessuna spiegazione necessaria.</p><button class="card cta tap" data-act="need-send">Mandalo</button>`)}
-const HOOK={notifiche:()=>{loadPush().then(()=>{const t=stack[stack.length-1];if(t&&t.n==='notifiche')rerender()})},respira:initRespira,ricordi:reveal,disegna:initDraw,qui:initQui,gioco:el=>GAMES[GI].run(el.querySelector('#gm'))};
+const HOOK={sfida:el=>rgRun(el),notifiche:()=>{loadPush().then(()=>{const t=stack[stack.length-1];if(t&&t.n==='notifiche')rerender()})},respira:initRespira,ricordi:reveal,disegna:initDraw,qui:initQui,gioco:el=>GAMES[GI].run(el.querySelector('#gm'))};
 /* ============ SORPRESA — solo preparazione locale, nessuna consegna ============ */
 const SP={type:'Messaggio',when:'Subito',tone:'Discreto'};
 const HINT={Foto:'La foto si potrà aggiungere quando la consegna sarà attiva.',Canzone:'La canzone si sceglierà con Spotify collegato.',Disegno:'Il disegno si potrà allegare in seguito.','Mini gioco':'Il gioco si sceglierà più avanti.',Ricordo:'Il ricordo si sceglierà dalla raccolta.'};
@@ -496,7 +507,7 @@ async function loadCouple(){if(!sb||!AUTH.user){AUTH.couple=null;return}
     const cid=mem[0].couple_id,other=mem.find(m=>m.user_id!==AUTH.user.id);
     const{data:c}=await sb.from('couples').select('code,code_expires_at').eq('id',cid).maybeSingle();
     let partner=null;
-    if(other){const{data:pp}=await sb.from('profiles').select('display_name').eq('id',other.user_id).maybeSingle();partner={name:(pp&&pp.display_name)||''}}
+    if(other){const{data:pp}=await sb.from('profiles').select('display_name').eq('id',other.user_id).maybeSingle();partner={id:other.user_id,name:(pp&&pp.display_name)||''}}
     AUTH.couple={id:cid,code:(c&&c.code)||null,exp:(c&&c.code_expires_at)||null,partner};
     startSignals();
   }catch(e){}}
@@ -537,7 +548,7 @@ async function authSubmit(){
   AUTH.busy=false;renderAccountIfOpen()}
 async function authLogout(){if(!sb)return;try{await sb.auth.signOut()}catch(e){}AUTH.user=null;AUTH.profile=null;AUTH.couple=null;AUTH.pairErr='';stopSignals();resetShared();renderAccountIfOpen()}
 async function saveName(){if(!sb||!AUTH.user)return;const v=($('#dn')?.value||'').trim().slice(0,40);
-  try{await sb.from('profiles').update({display_name:v}).eq('id',AUTH.user.id);AUTH.profile={...(AUTH.profile||{}),display_name:v};applyName();toast('Salvato.')}catch(e){toast('Non salvato. Riprova.')}}
+  try{const{data,error}=await sb.from('profiles').upsert({id:AUTH.user.id,display_name:v}).select('id');if(error||!data||!data.length)return toast('Non salvato. Riprova.');AUTH.profile={...(AUTH.profile||{}),display_name:v};applyName();toast('Salvato.')}catch(e){toast('Non salvato. Riprova.')}}
 /* ---- Fase 4a: saluto con il proprio nome ---- */
 function applyName(){const n=((AUTH.profile&&AUTH.profile.display_name)||'').trim();if(!n||n===NAME)return;NAME=n;
   try{localStorage.setItem('uffa_name',n)}catch(e){}
@@ -551,7 +562,7 @@ async function sendSignal(k){
   if(Date.now()-(sendSignal.t||0)<2500)return ok;
   sendSignal.t=Date.now();
   try{const{error}=await sb.from('signals').insert({couple_id:AUTH.couple.id,sender:AUTH.user.id,kind:k});
-    if(error)return 'Non è partito. Riprova tra poco.';try{sb.functions.invoke('uffa-notify',{body:{kind:k}}).catch(()=>{})}catch(e){}return ok}
+    if(error)return 'Non è partito. Riprova tra poco.';notify({type:'signal',kind:k});return ok}
   catch(e){return 'Non è partito. Controlla la connessione.'}}
 function stopSignals(){if(sigCh){try{sb.removeChannel(sigCh)}catch(e){}sigCh=null}}
 function startSignals(){if(!paired())return;const cid=AUTH.couple.id;
@@ -571,7 +582,7 @@ function showSignals(rows){const r=rows[0];
   sheet(`<p class="mu sm" style="margin:0 0 .6rem">${who?'Da '+esc(who):'Per te'}${hh}${more}</p><p style="font:2.2rem/1.1 var(--serif);margin:0">${esc(z[1])}.</p>`)}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){checkSignals();loadShared()}});
 /* ============ FASE 4b — lettere, incontro, domanda del giorno, sorprese, ricordi condivisi ============ */
-const SH={letters:[],meet:null,answers:[],sur:[],mine:[]};
+const SH={letters:[],meet:null,answers:[],sur:[],mine:[],rounds:[],songs:[]};
 const me=()=>AUTH.user&&AUTH.user.id;
 const pad=n=>String(n).padStart(2,'0');
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
@@ -585,19 +596,22 @@ let LOC=OCC[0];
 const QS=['Qual è stata la parte migliore della tua giornata?','Cosa ti ha fatto ridere oggi?','Una canzone che hai in testa in questi giorni?','Cosa mangeresti adesso, potendo scegliere qualsiasi cosa?','Una cosa piccola che vorresti fare insieme la prossima volta?','Cosa ti sta pesando un po’, in questo periodo?','Un posto dove vorresti svegliarti domani?','Qual è l’ultima cosa che ti ha sorpreso?','Cosa vorresti che l’altro sapesse di oggi?','Un film o una serie da vedere insieme?','Cosa ti fa sentire a casa?','Un ricordo nostro a cui pensi spesso?','Se avessi un’ora libera adesso, cosa faresti?','Una cosa che hai imparato di recente?','Cosa ti dà energia, ultimamente?','Il tuo piccolo lusso preferito?','Cosa diresti a te di dieci anni fa?','Che tempo fa lì, e che umore ha?','Una tua abitudine che nessuno conosce?','Cosa ti piacerebbe fare questo weekend?','La cosa più bella che hai visto questa settimana?','Un piatto che ti ricorda casa?','Cosa ti fa arrabbiare più del dovuto?','Un sogno piccolo che hai adesso?','Cosa vorresti che facessimo più spesso?','La tua giornata in tre parole.','La prima cosa che faresti se fossimo insieme adesso?','La tua stagione preferita, e perché?','Una cosa che hai fatto bene questa settimana?','Cosa ti aiuta ad addormentarti?'];
 const qOf=k=>QS[((dayNum(k)%QS.length)+QS.length)%QS.length];
 const TONE={Discreto:'C’è una cosa per te.',Misterioso:'Qualcuno ha lasciato qualcosa qui.',Dolce:'Questa è per te.',Giocoso:'Sorpresa.'};
-function resetShared(){SH.letters=[];SH.meet=null;SH.answers=[];SH.sur=[];SH.mine=[];DATA.ricordi=DEMO;homeBits()}
+function resetShared(){SH.songs=[];SH.rounds=[];SH.letters=[];SH.meet=null;SH.answers=[];SH.sur=[];SH.mine=[];DATA.ricordi=DEMO;homeBits()}
 async function loadShared(quiet){try{await loadShared0(quiet)}catch(e){}}
 async function loadShared0(quiet){if(!paired())return;const c=AUTH.couple.id,u=me();
-  const [L,M,A,S_,R]=await Promise.all([
+  const [L,M,A,S_,R,SG,G]=await Promise.all([
     safeQ(sb.from('letters').select('id,author,occasion,body,created_at').eq('couple_id',c).order('created_at',{ascending:false})),
     safeQ(sb.from('next_meet').select('at').eq('couple_id',c).maybeSingle()),
     safeQ(sb.from('daily_answers').select('user_id,day,answer').eq('couple_id',c).order('day',{ascending:false}).limit(80)),
     safeQ(sb.from('surprises').select('id,author,kind,tone,body,when_label,deliver_at').eq('couple_id',c).order('deliver_at',{ascending:false}).limit(60)),
-    safeQ(sb.from('memories').select('id,author,day,title,place,body').eq('couple_id',c).order('day',{ascending:false}))]);
+    safeQ(sb.from('memories').select('id,author,day,title,place,body').eq('couple_id',c).order('day',{ascending:false})),
+    safeQ(sb.from('songs').select('id,author,url,title,thumb,note,created_at').eq('couple_id',c).order('created_at',{ascending:false}).limit(100)),
+    safeQ(sb.from('game_rounds').select('id,author,game,data,reply,replied_at,created_at').eq('couple_id',c).order('created_at',{ascending:false}).limit(30))]);
   if(L.data)SH.letters=L.data;
   if(!M.error)SH.meet=(M.data&&M.data.at)||null;
-  if(A.data)SH.answers=A.data;
+  if(A.data)SH.answers=A.data;if(G.data)SH.rounds=G.data;if(SG.data)SH.songs=SG.data;
   if(S_.data){SH.sur=S_.data.filter(x=>x.author!==u);SH.mine=S_.data.filter(x=>x.author===u)}
+  const pid=AUTH.couple.partner&&AUTH.couple.partner.id;if(pid){const P=await safeQ(sb.from('profiles').select('display_name').eq('id',pid).maybeSingle());if(P.data&&P.data.display_name&&P.data.display_name!==AUTH.couple.partner.name){AUTH.couple.partner.name=P.data.display_name;renderAccountIfOpen()}}
   if(R.data)DATA.ricordi=R.data.length?R.data.map(m=>({real:1,id:m.id,author:m.author,d:fmtDay(m.day)||'Senza data',t:m.title,x:m.body||'',luogo:m.place||undefined,tag:[]})):DEMO;
   homeBits();if(!quiet)refreshShared();checkSurprises()}
 function homeBits(){const g=document.querySelector('#gift');if(g&&g.isConnected){const d=dynList()[0];g.dataset.go=d.to;const sp=g.querySelector('span');if(sp)sp.textContent=d.t}
@@ -613,18 +627,18 @@ function dqHTML(){if(!paired())return '';const done=SH.answers.some(a=>a.user_id
   return `<button class="parl tap" style="border-top:0;margin-top:0;padding:1.1rem .1rem" data-go="domanda"><span style="font:1.2rem var(--serif)">La domanda di oggi</span><span class="s">${done?'Fatto':'›'}</span></button>`}
 async function saveLetter(){const occ=(($('#lo')||{}).value||'').trim()||LOC,body=(($('#lb')||{}).value||'').trim();if(!body)return toast('Scrivi qualcosa, prima.');
   const{error}=await safeQ(sb.from('letters').insert({couple_id:AUTH.couple.id,author:me(),occasion:occ.slice(0,80),body:body.slice(0,6000)}));
-  if(error)return toast('Non salvata. Riprova.');hap([10,40,10]);await loadShared(1);back();rerender();toast('Lasciata.')}
+  if(error)return toast('Non salvata. Riprova.');notify({type:'letter'});hap([10,40,10]);await loadShared(1);back();rerender();toast('Lasciata.')}
 async function saveMeet(){const v=(($('#md')||{}).value||'');if(!v)return toast('Scegli una data.');
   const{error}=await safeQ(sb.from('next_meet').upsert({couple_id:AUTH.couple.id,at:v,updated_by:me(),updated_at:new Date().toISOString()},{onConflict:'couple_id'}));
   if(error)return toast('Non salvato. Riprova.');hap([10,40,10]);await loadShared(1);back();toast('Segnato.')}
 async function clearMeet(){await safeQ(sb.from('next_meet').delete().eq('couple_id',AUTH.couple.id));await loadShared(1);back()}
 async function saveAnswer(){const v=(($('#da')||{}).value||'').trim();if(!v)return toast('Scrivi la tua risposta.');
   const{error}=await safeQ(sb.from('daily_answers').insert({couple_id:AUTH.couple.id,user_id:me(),day:todayKey(),answer:v.slice(0,1000)}));
-  if(error)return toast('Non salvata. Riprova.');hap([10,40,10]);await loadShared(1);rerender()}
+  if(error)return toast('Non salvata. Riprova.');notify({type:'answer'});hap([10,40,10]);await loadShared(1);rerender()}
 async function saveMemory(){const t=(($('#mt')||{}).value||'').trim();if(!t)return toast('Dagli almeno un titolo.');
   const row={couple_id:AUTH.couple.id,author:me(),title:t.slice(0,120),day:(($('#mdd')||{}).value||null),place:((($('#ml')||{}).value||'').trim()||null),body:((($('#mx')||{}).value||'').trim()||null)};
   const{error}=await safeQ(sb.from('memories').insert(row));
-  if(error)return toast('Non salvato. Riprova.');hap([10,40,10]);await loadShared(1);back();rerender();toast('Tenuto.')}
+  if(error)return toast('Non salvato. Riprova.');notify({type:'memory'});hap([10,40,10]);await loadShared(1);back();rerender();toast('Tenuto.')}
 async function delShared(tab,id,goBack){if(!confirm('Eliminare? Non si può recuperare.'))return;
   const{error}=await safeQ(sb.from(tab).delete().eq('id',id));if(error)return toast('Non eliminato. Riprova.');
   await loadShared(1);if(goBack)back();rerender()}
@@ -640,7 +654,7 @@ async function prepServer(){const tx=(($('#st')||{}).value||'').trim();if(!tx)re
   if(SP.when==='Data e ora'){const v=(($('#wd')||{}).value||'');if(!v)return toast('Scegli data e ora.');at=new Date(v);label=(()=>{try{return at.toLocaleString('it-IT',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})}catch(e){return v.replace('T',' alle ')}})()}
   else if(SP.when!=='Subito'){const w=(($('#wp')||{}).value||'Questa settimana'),days=/3/.test(w)?3:/settimana/i.test(w)?7:30;at=new Date(Date.now()+(.1+.9*Math.random())*days*864e5);label='A caso: '+w.toLowerCase()}
   const{error}=await safeQ(sb.from('surprises').insert({couple_id:AUTH.couple.id,author:me(),kind:SP.type,tone:SP.tone,body:tx.slice(0,4000),when_label:label,deliver_at:at.toISOString()}));
-  if(error)return toast('Non è partita. Riprova.');
+  if(error)return toast('Non è partita. Riprova.');if(SP.when==='Subito')notify({type:'surprise'});
   const st=$('#st');if(st)st.value='';hap([10,40,10]);toast(SP.when==='Subito'?'Mandata.':'Preparata. Arriverà da sola.');await loadShared(1);const e=$('#spl');if(e)e.innerHTML=spl()}
 const SSEEN='uffa_sur_seen';
 function openSur(x,more){hap([10,80,10]);
@@ -650,9 +664,64 @@ function checkSurprises(){if(!paired()||$('#sheet'))return;let seen=[];try{seen=
   const x=n[n.length-1];seen.push(x.id);try{localStorage.setItem(SSEEN,JSON.stringify(seen.slice(-300)))}catch(e){}
   openSur(x,n.length-1)}
 setInterval(()=>{if(paired()&&document.visibilityState==='visible')loadShared(1)},60000);
+/* ============ CANZONI CONDIVISE — link da Spotify, senza bisogno di collegare l'account ============ */
+let SONGBUSY=false;
+const isHttps=u=>/^https:\/\/[^\s"'<>]+$/i.test(u||'');
+const songKind=u=>/\/playlist\//.test(u)?'Una playlist':/\/album\//.test(u)?'Un album':/\/episode\/|\/show\//.test(u)?'Un podcast':'Una canzone';
+function songHTML(x){const mine=x.author===me(),w=other();
+  return `<div class="card" style="margin-bottom:.7rem;display:flex;gap:.9rem;align-items:center">${isHttps(x.thumb)?`<img src="${esc(x.thumb)}" alt="" style="width:3.4rem;height:3.4rem;border-radius:.6rem;object-fit:cover;flex-shrink:0">`:'<span class="th2" style="width:3.4rem;height:3.4rem">♪</span>'}
+  <div style="flex:1;min-width:0"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:var(--tx);text-decoration:none;display:block;font:1.15rem/1.25 var(--serif);overflow-wrap:break-word">${esc(x.title||songKind(x.url))}</a>
+  <span class="mu sm" style="display:block;margin-top:.2rem">${mine?'Da te':'Da '+esc(w)} · ${fmtShort(x.created_at)}</span>${x.note?`<span class="sm" style="display:block;margin-top:.3rem;font-style:italic;overflow-wrap:break-word">${esc(x.note)}</span>`:''}
+  ${mine?`<button class="mu sm" data-act="song-del" data-id="${x.id}" style="margin-top:.3rem;min-height:2.2rem">Elimina</button>`:''}</div></div>`}
+async function songInfo(u){if(!/spotify\./i.test(u))return {};
+  try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),4000);const r=await fetch('https://open.spotify.com/oembed?url='+encodeURIComponent(u),{signal:c.signal});clearTimeout(tm);
+    if(!r.ok)return {};const j=await r.json();return {title:(j.title||'').slice(0,200)||null,thumb:isHttps(j.thumbnail_url)?j.thumbnail_url:null}}catch(e){return {}}}
+async function saveSong(){if(SONGBUSY)return;let u=(($('#sl')||{}).value||'').trim();const note=(($('#sn')||{}).value||'').trim().slice(0,200);
+  const m=u.match(/https:\/\/\S+/i);u=m?m[0]:'';if(!isHttps(u)||u.length>500)return toast('Incolla un link che inizia con https://');
+  SONGBUSY=true;rerender();const info=await songInfo(u);
+  const{error}=await safeQ(sb.from('songs').insert({couple_id:AUTH.couple.id,author:me(),url:u,title:info.title||null,thumb:info.thumb||null,note:note||null}));
+  SONGBUSY=false;if(error){rerender();return toast('Non mandata. Riprova.')}
+  notify({type:'song'});hap([10,40,10]);await loadShared(1);back();rerender();toast('Mandata.')}
+function songPick(){if(!paired())return null;const L=SH.songs.filter(x=>x.author!==me());if(!L.length)return null;const x=L[Math.floor(Math.random()*L.length)];
+  return {text:`Ecco una di quelle che ti ha mandato ${other()}: ${x.title||songKind(x.url).toLowerCase()}.${x.note?' Aveva scritto: “'+x.note+'”':''}`,acts:[['Ascoltala',x.url],['Canzoni condivise','canzoni']]}}
+/* ============ SFIDE A DISTANZA — uno risponde, l'altro gioca quando vuole ============ */
+function notify(p){if(!paired())return;try{sb.functions.invoke('uffa-notify',{body:p}).catch(()=>{})}catch(e){}}
+const uid=()=>{try{return crypto.randomUUID()}catch(e){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)})}};
+const RG={
+  duo:{t:'Chi conosce meglio l’altro?',make:()=>QD.map(([q,o])=>[q,o]),qa:q=>q+': tu?',qb:(q,w)=>q+': cosa ha risposto '+esc(w)+'?',guess:1},
+  vf:{t:'Vero o falso',make:()=>VF.map(x=>[x,['Vero','Falso']]),qa:q=>`“${q}”${sm('Per te è vera?')}`,qb:(q,w)=>`“${q}”${sm('Per '+esc(w)+' è vera?')}`,guess:1},
+  dil:{t:'Cosa preferisci?',make:()=>[...DL].sort(()=>Math.random()-.5).slice(0,5).map(x=>['Cosa preferisci?',x]),qa:q=>q,qb:q=>q,guess:0}
+};
+let RGS=null,RGR=null;
+function rgScore(r){const a=r.data.a||[],b=(r.reply&&r.reply.b)||[],n=a.filter((v,i)=>v===b[i]).length,t=a.length,w=other();
+  if(!RG[r.game].guess)return `Avete scelto uguale ${n} volte su ${t}.`;
+  return r.author===me()?`${w} ti ha indovinato ${n} su ${t}.`:`Hai indovinato ${n} su ${t}.`}
+function rgDetailHTML(r){const u=me(),w=other(),a=r.data.a||[],b=(r.reply&&r.reply.b)||[],mine=r.author===u;
+  return `<p style="font:1.7rem/1.2 var(--serif);margin:-.4rem 0 1.4rem">${esc(rgScore(r))}</p>`+r.data.items.map(([q,o],i)=>{const same=a[i]===b[i];
+    return `<div class="card" style="margin-bottom:.7rem"><div style="font:1.1rem var(--serif);margin-bottom:.4rem">${esc(q)}</div><p class="mu sm" style="margin:0">${mine?'Tu':esc(w)}: ${esc(o[a[i]]||'—')} · ${mine?esc(w):'Tu'}: ${esc(o[b[i]]||'—')}${same?' · <span style="color:var(--ac)">Uguale</span>':''}</p></div>`}).join('')}
+function remoteHTML(){const u=me(),w=other(),R=SH.rounds||[];
+  const play=R.filter(r=>r.author!==u&&!r.replied_at&&RG[r.game]),done=R.filter(r=>r.replied_at&&RG[r.game]).slice(0,5),wait=R.filter(r=>r.author===u&&!r.replied_at&&RG[r.game]).slice(0,3);
+  const sub=t=>`<span class="mu sm" style="display:block;font-family:var(--sans);margin-top:.15rem">${t}</span>`;
+  return '<p class="mu sm" style="margin:0 0 .8rem">A distanza</p>'
+    +play.map(r=>`<button class="card row tap need" data-act="rg-play" data-id="${r.id}"><span>Tocca a te${sub(esc(w)+' ti ha sfidato · '+esc(RG[r.game].t))}</span><span class="mu">›</span></button>`).join('')
+    +done.map(r=>`<button class="card row tap" data-act="rg-res" data-id="${r.id}"><span>${esc(RG[r.game].t)}${sub(esc(rgScore(r)))}</span><span class="mu">›</span></button>`).join('')
+    +wait.map(r=>`<div class="card row" style="opacity:.7"><span>${esc(RG[r.game].t)}${sub('Aspetta che giochi '+esc(w)+'.')}</span></div>`).join('')
+    +`<div class="chips w" style="margin:.2rem 0 1.8rem">${Object.keys(RG).map(k=>`<button class="chip" data-act="rg-new" data-g="${k}">Sfida: ${RG[k].t}</button>`).join('')}</div><p class="mu sm" style="margin:0 0 .8rem">Insieme, sullo stesso telefono</p>`}
+function rgRun(el){const box=el.querySelector('#gm'),S_=RGS,w=other();if(!box||!S_)return;let i=0;
+  const step=()=>{if(i>=S_.items.length)return finish();const[q,o]=S_.items[i];ch(box,S_.mode==='new'?RG[S_.g].qa(q):RG[S_.g].qb(q,w),o,(v,idx)=>{S_.ans.push(idx);i++;step()})};
+  const home=()=>{back();rerender()};
+  const finish=async()=>{box.innerHTML=gq('Un attimo…');
+    if(S_.mode==='new'){const id=uid();const{error}=await safeQ(sb.from('game_rounds').insert({id,couple_id:AUTH.couple.id,author:me(),game:S_.g,data:{items:S_.items,a:S_.ans}}));
+      if(error)return msg(box,'Non è partita.','Torna ai giochi',home,'Riprova tra poco.');
+      notify({type:'game',id,stage:'new'});hap([10,40,10]);await loadShared(1);return msg(box,'Sfida mandata.','Torna ai giochi',home,`Quando ${esc(w)} avrà giocato, trovi il risultato in Giochi.`)}
+    const r=S_.round;const{error}=await safeQ(sb.from('game_rounds').update({reply:{b:S_.ans},replied_at:new Date().toISOString()}).eq('id',r.id));
+    if(error)return msg(box,'Non salvata.','Torna ai giochi',home,'Riprova tra poco.');
+    notify({type:'game',id:r.id,stage:'done'});hap([10,40,10]);await loadShared(1);
+    const done=SH.rounds.find(x=>x.id===r.id)||{...r,reply:{b:S_.ans},replied_at:1};box.innerHTML=rgDetailHTML(done)+'<button class="card cta tap" id="gx">Torna ai giochi</button>';box.querySelector('#gx').onclick=home};
+  step()}
 /* ============ NOTIFICHE — la chiave pubblica può stare qui; quella privata vive solo su Supabase ============ */
 const VAPID_PUB='BHC4pfdwxrC8ZXGrzP60ASTYL3PthIft_9MuHpqI6zFFl7Me8Zdxn55brmOOhRnBILbPhnyFgQyoYX2OMah737k';
-const NTYPES=[['signals','Ti penso','Quando ti manda un segnale.'],['need','Ho bisogno di te','Quando ha bisogno di te.']];
+const NTYPES=[['signals','Ti penso','Quando ti manda un segnale.'],['need','Ho bisogno di te','Quando ha bisogno di te.'],['games','Giochi','Quando ti sfida o gioca la tua sfida.'],['letters','Lettere','Quando te ne lascia una.'],['surprises','Sorprese','Quando te ne manda una subito.'],['answers','La domanda di oggi','Quando risponde.'],['memories','Ricordi','Quando ne aggiunge uno.'],['songs','Canzoni','Quando te ne manda una.']];
 const NP={sub:null,prefs:{},loaded:false,busy:false};
 const pushSupported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
 const standalone=()=>navigator.standalone===true||(typeof matchMedia==='function'&&matchMedia('(display-mode: standalone)').matches);
@@ -713,18 +782,29 @@ const V={
   <div class="dock"><input id="ci" placeholder="Scrivi qui" enterkeyhint="send" autocomplete="off"><button class="snd" data-act="send" aria-label="Invia">${I.up}</button></div>`,
 
   musica:()=>`${head('Musica.')}<p class="hi" style="margin:-.7rem 0 1.4rem">Che cosa vuoi ascoltare?</p>
+  ${paired()?`<div class="set"><label>Canzoni condivise</label>${SH.songs.length?SH.songs.slice(0,3).map(songHTML).join('')+(SH.songs.length>3?'<button class="card row tap" data-go="canzoni">Tutte le vostre canzoni<span class="mu">›</span></button>':''):'<p class="mu" style="margin:0 0 .6rem">Ancora nessuna. Manda la prima.</p>'}
+  <button class="card cta tap" style="margin:.4rem 0 1.8rem" data-go="canzone">Manda una canzone</button></div>`:''}
   <div class="grid" style="margin-top:0">${list(MUSIC.actions,(a,i)=>`<button class="card sq tap" data-act="mood" data-i="${i}">${a[0]}</button>`)}</div>
   <button class="card cta tap" data-go="spotify">${MUSIC.connected?'Spotify collegato':'Collega Spotify'}</button>`,
+
+  canzoni:()=>`${head('Per voi')}<p class="hi" style="margin:-.8rem 0 1.4rem">Le canzoni che vi siete mandati.</p>
+  ${paired()?`<button class="card cta tap" style="margin:0 0 1.4rem" data-go="canzone">Manda una canzone</button>${SH.songs.length?SH.songs.map(songHTML).join(''):'<p class="mu">Ancora nessuna.</p>'}`:'<p class="mu">Collegatevi in Tu → Account per mandarvi canzoni.</p>'}`,
+
+  canzone:()=>`${head('Una canzone')}<p class="hi" style="margin:-.8rem 0 1.4rem">Per ${esc(other())}.</p>
+  <div class="set"><label>Link</label><input class="fld" id="sl" type="url" inputmode="url" autocapitalize="off" autocomplete="off" placeholder="https://open.spotify.com/…"></div>
+  <p class="mu sm" style="margin:-.9rem 0 1.4rem">Da Spotify: tocca ⋯ sulla canzone → Condividi → Copia link.</p>
+  <div class="set"><label>Due parole, se vuoi</label><input class="fld" id="sn" maxlength="200" autocomplete="off" placeholder="Questa mi fa pensare a te."></div>
+  <button class="card cta tap" data-act="song-save">${SONGBUSY?'…':'Mandala'}</button>`,
 
   spotify:()=>`${head('Spotify')}<div class="center" style="align-items:flex-start;text-align:left"><p style="font:1.8rem/1.2 var(--serif);margin:0">Non è ancora collegato.</p>
   <p class="mu" style="margin:0;line-height:1.5">Spotify potrà essere collegato in seguito. Quando sarà attivo, potrai scegliere cosa ascoltare da qui, senza uscire da Uffa.</p>
   <p class="mu sm" style="margin:0">Quando sarà collegato, potrai revocare l’accesso in qualsiasi momento e Uffa. non vedrà mai la tua password Spotify. Per ora questa schermata mostra solo come funzionerà.</p></div>`,
 
-  giochi:()=>`${head('Giochi')}${list(GAMES,(g,i)=>`<button class="card tap" style="margin-bottom:.75rem" data-act="play" data-i="${i}"><div class="md" style="justify-content:space-between"><span style="font:1.3rem var(--serif)">${g.t}</span><span class="tag">${g.m}</span></div><p class="mu sm" style="margin:.35rem 0 0">${g.d}</p></button>`)}`,
+  giochi:()=>`${head('Giochi')}${paired()?remoteHTML():''}${list(GAMES,(g,i)=>`<button class="card tap" style="margin-bottom:.75rem" data-act="play" data-i="${i}"><div class="md" style="justify-content:space-between"><span style="font:1.3rem var(--serif)">${g.t}</span><span class="tag">${g.m}</span></div><p class="mu sm" style="margin:.35rem 0 0">${g.d}</p></button>`)}`,
   gioco:()=>`${head(GAMES[GI].t)}<div id="gm"></div>`,
   disegna:()=>`${head('Disegna insieme')}<canvas id="cv" class="cv"></canvas>
   <div class="chips w"><button class="chip on" data-col="--tx">Chiaro</button><button class="chip" data-col="--ac">Accento</button><button class="chip" data-col="--ia">Luce</button><button class="chip" id="clr">Cancella</button></div>
-  <p class="mu sm" style="margin:.4rem 0 0">Per ora disegni solo tu. In futuro qui disegnerete insieme.</p>`,
+  <p class="mu sm" style="margin:.4rem 0 0">${paired()?'Quello che disegni compare sul telefono di '+esc(other())+' mentre ha Disegna insieme aperto, e viceversa. Cancella pulisce per tutti e due.':'Per ora disegni solo tu. Collegatevi in Tu → Account per disegnare insieme.'}</p>`,
   ascolta:()=>`${head('Ascolta insieme')}<div class="duo"><i class="inf"></i><i class="inf"></i></div>
   <p style="font:1.7rem/1.25 var(--serif);margin:1.6rem 0 .6rem">Stessa musica, stesso momento.</p>
   <p class="mu" style="line-height:1.5;margin:0 0 1.4rem">Serve Spotify collegato. Per ora scegliete da dove partire.</p>
@@ -808,9 +888,12 @@ const V={
     if(!paired())return h+'<p class="mu">Collegatevi prima in Tu → Account.</p>';
     if(Notification.permission==='denied')return h+'<p class="mu" style="line-height:1.5">Le notifiche sono bloccate. Si riattivano da Impostazioni → Notifiche → Uffa.</p>';
     if(!NP.loaded)return h+'<p class="mu">Un momento…</p>';
-    if(!NP.sub)return h+`<button class="card cta tap" data-act="push-on">${NP.busy?'…':'Attiva le notifiche'}</button><p class="mu sm" style="margin-top:1rem;line-height:1.5">Solo su questo telefono, per i segnali di Ti penso. Niente “online”, niente “ha visto”.</p>`;
+    if(!NP.sub)return h+`<button class="card cta tap" data-act="push-on">${NP.busy?'…':'Attiva le notifiche'}</button><p class="mu sm" style="margin-top:1rem;line-height:1.5">Solo su questo telefono. Il testo di lettere, risposte e sorprese non compare mai nella notifica. Niente “online”, niente “ha visto”.</p>`;
     return h+list(NTYPES,([k,t,d])=>{const on=NP.prefs[k]!==false;return `<button class="card row tap" data-act="push-pref" data-k="${k}"><span><span style="display:block">${t}</span><span class="mu sm" style="font-family:var(--sans)">${d}</span></span><span class="tag" style="${on?'color:var(--tx);border-color:var(--ia)':''}">${on?'Sì':'No'}</span></button>`})
       +'<button class="mu sm" style="margin-top:1.2rem;min-height:2.75rem" data-act="push-off">Disattiva su questo telefono</button>'},
+
+  sfida:()=>!RGS?`${head('Giochi')}<p class="mu">Torna ai giochi e scegli una sfida.</p>`:`${head(RG[RGS.g].t)}<p class="mu sm" style="margin:-.8rem 0 1.4rem">${RGS.mode==='new'?'Rispondi tu. Poi toccherà a '+esc(other())+'.':'Sfida di '+esc(other())+'.'}</p><div id="gm"></div>`,
+  sfidares:()=>!RGR?`${head('Giochi')}<p class="mu">Nessun risultato da mostrare.</p>`:`${head(RG[RGR.game].t)}${rgDetailHTML(RGR)}`,
 
   sorprese:()=>`${head('Sorpresa.')}<p class="hi" style="margin:-.8rem 0 1.6rem">Preparane una. Solo tu saprai quando arriva.</p>
   ${surTop()}
@@ -880,6 +963,8 @@ const DYN=[{t:'Ti va di giocare?',to:'giochi'},{t:'Un ricordo per oggi.',to:'ric
 function dynList(){const L=[];
   if(paired()){const rec=SH.sur.filter(x=>Date.now()-new Date(x.deliver_at)<3*864e5);if(rec.length)L.push({t:'Ho qualcosa per te.',to:'sorprese'});
     if(SH.letters.some(l=>l.author!==me()))L.push({t:'Aprimi quando…',to:'lettere'});
+    if(SH.songs.some(x=>x.author!==me()&&Date.now()-new Date(x.created_at)<2*864e5))L.push({t:'Una canzone per te.',to:'canzoni'});
+    if(SH.rounds.some(r=>r.author!==me()&&!r.replied_at))L.push({t:'Tocca a te: c’è una sfida.',to:'giochi'});
     if(!SH.answers.some(a=>a.user_id===me()&&a.day===todayKey()))L.push({t:'C’è una domanda per oggi.',to:'domanda'})}
   return L.concat(DYN)}
 function dynLoop(el){let i=0;const g=el.querySelector('#gift');
@@ -921,6 +1006,11 @@ document.addEventListener('click',e=>{
   else if(a==='need')needSheet();
   else if(a==='need-send'){const sh=$('#sheet');sendSignal(4).then(m=>{if(sh&&sh.close)sh.close();toast(m)})}
   else if(a==='letgo')letGo();
+  else if(a==='song-save')saveSong();
+  else if(a==='song-del')delShared('songs',t.dataset.id);
+  else if(a==='rg-new'){if(!paired())return toast('Collegatevi prima in Tu → Account.');RGS={mode:'new',g:t.dataset.g,items:RG[t.dataset.g].make(),ans:[]};go('sfida')}
+  else if(a==='rg-play'){const r=SH.rounds.find(x=>x.id===t.dataset.id);if(r){RGS={mode:'reply',g:r.game,items:r.data.items,ans:[],round:r};go('sfida')}}
+  else if(a==='rg-res'){const r=SH.rounds.find(x=>x.id===t.dataset.id);if(r){RGR=r;go('sfidares')}}
   else if(a==='push-on')pushOn();
   else if(a==='push-pref')pushPref(t.dataset.k);
   else if(a==='push-off')pushOff();
@@ -946,7 +1036,7 @@ document.addEventListener('click',e=>{
   else if(a==='pair-refresh')pairRefresh();
   else if(a==='send')send($('#ci').value);
   else if(a==='quick')send(t.dataset.q);
-  else if(a==='mood'){const m=MUSIC.actions[t.dataset.i];sheet(`<p style="font:1.7rem var(--serif);margin:0 0 .5rem">${m[0]}</p><p class="mu" style="margin:0 0 .6rem">${m[1]}</p><p class="mu sm" style="margin:0">Disponibile dopo il collegamento a Spotify.</p>`)}
+  else if(a==='mood'){if(t.dataset.i==='2'&&paired())return go('canzoni');const m=MUSIC.actions[t.dataset.i];sheet(`<p style="font:1.7rem var(--serif);margin:0 0 .5rem">${m[0]}</p><p class="mu" style="margin:0 0 .6rem">${m[1]}</p><p class="mu sm" style="margin:0">Disponibile dopo il collegamento a Spotify.</p>`)}
 });
 
 /* ============ INTRO CINEMATOGRAFICA ============ */
