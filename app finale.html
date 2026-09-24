@@ -142,7 +142,17 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:7;back
 .pad.on{border-color:var(--ia)}
 .ar{position:relative;height:16rem;border:.5px solid var(--ln);border-radius:1.3rem;overflow:hidden;margin-bottom:.8rem}
 .dt{position:absolute;left:42%;top:40%;width:3.2rem;height:3.2rem;border-radius:50%;background:var(--ac);opacity:.9;transition:left calc(.25s*var(--k)),top calc(.25s*var(--k))}
-.cv{display:block;width:100%;height:52vh;touch-action:none;border:.5px solid var(--ln);border-radius:1.3rem;background:var(--s1);margin-bottom:.8rem}
+.cv{display:block;width:100%;aspect-ratio:3/4;max-height:52vh;touch-action:none;border:.5px solid var(--ln);border-radius:1.3rem;background:var(--s1);margin:0 auto .7rem}
+.pal{display:flex;gap:.6rem;overflow-x:auto;padding:.35rem .3rem .6rem;align-items:center}
+.sw{flex:none;width:1.75rem;height:1.75rem;min-height:0;min-width:0;padding:0;box-sizing:border-box;border-radius:50%;border:.5px solid var(--ln);position:relative;overflow:hidden}
+.sw.on{outline:1.5px solid var(--tx);outline-offset:2.5px}
+.sw input{position:absolute;inset:0;opacity:0;width:100%;height:100%;border:0;padding:0}
+.sw.cc{background:conic-gradient(#d77a61,#f2d16b,#8fb996,#6fa8dc,#9b7fc4,#d77a61)}
+.sz{flex:none;width:2.2rem;height:2.2rem;min-height:0;padding:0;box-sizing:border-box;border-radius:50%;border:.5px solid var(--ln);display:grid;place-items:center}
+.sz i{display:block;border-radius:50%;background:var(--mu)}.sz.on{border-color:var(--ia)}.sz.on i{background:var(--tx)}
+.dtl .chip{padding:.5rem .72rem;font-size:.78rem}
+.dimg img{width:100%;height:100%;object-fit:contain;display:block}
+.fr.dimg{aspect-ratio:3/4}
 .duo{display:flex;justify-content:center;margin-top:2rem}
 .duo i{width:6rem;height:6rem;border-radius:50%;border:.5px solid var(--ac);margin:0 -.9rem;animation:br calc(6s*var(--k)) ease-in-out infinite}
 .duo i+i{animation-delay:-3s;border-color:var(--ia)}
@@ -483,24 +493,74 @@ let GI=0,SI=0;
 /* ============ TI PENSO — segnali ============ */
 const SIG=[['💭','Ti penso'],['🤍','Sono qui'],['🫶','Un abbraccio'],['👀','Guardami un secondo'],['','Ho bisogno di te']];
 /* ============ INSIEME ============ */
+/* il disegno resta finché l'app è aperta, anche se esci da questa schermata */
+const DTOOLS=[['pen','Penna'],['mark','Pennarello'],['hl','Evidenziatore'],['er','Gomma']];
+const DSIZES=[.006,.014,.03];
+const DPAL=['#eceae4','#878a92','#111214','#e4d2a6','#f2d16b','#e8a54b','#d77a61','#b5483f','#8fb996','#4f8a5f','#b9c6de','#6fa8dc','#3d5a98','#9b7fc4'];
+const DTL={pen:{a:1,m:1},mark:{a:.55,m:1.7},hl:{a:.28,m:3.6},er:{a:1,m:2.6,er:1}};
+const DR={s:[],cur:{},ui:{t:'pen',w:.014,c:null}};
+const IMGC={};
+function drawStroke(x,s,W,H){const T=DTL[s.t]||DTL.pen,p=s.p;if(!p||!p.length)return;x.save();
+  x.globalCompositeOperation=T.er?'destination-out':'source-over';x.globalAlpha=T.a;x.strokeStyle=T.er?'#000':s.c;
+  x.lineWidth=Math.max(1,s.w*W*T.m);x.lineCap=x.lineJoin='round';x.beginPath();x.moveTo(p[0][0]*W,p[0][1]*H);
+  if(p.length===1)x.lineTo(p[0][0]*W+.01,p[0][1]*H);
+  else{for(let i=1;i<p.length-1;i++)x.quadraticCurveTo(p[i][0]*W,p[i][1]*H,(p[i][0]+p[i+1][0])/2*W,(p[i][1]+p[i+1][1])/2*H);const q=p[p.length-1];x.lineTo(q[0]*W,q[1]*H)}
+  x.stroke();x.restore()}
+function drawURL(){const w=900,h=1200,o=document.createElement('canvas'),L=document.createElement('canvas');o.width=L.width=w;o.height=L.height=h;
+  const lx=L.getContext('2d');DR.s.forEach(z=>drawStroke(lx,z,w,h));const ox=o.getContext('2d');
+  ox.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--s1').trim()||'#15171b';ox.fillRect(0,0,w,h);ox.drawImage(L,0,0);return o.toDataURL('image/jpeg',.85)}
 function initDraw(el){const c=el.querySelector('#cv'),x=c.getContext('2d'),r0=c.getBoundingClientRect(),dp=devicePixelRatio||1,W=r0.width||1,H=r0.height||1;
-  c.width=W*dp;c.height=H*dp;x.scale(dp,dp);x.lineCap='round';x.lineWidth=3;let col='--tx',dr=0,l,ch=null,buf=[];
+  c.width=W*dp;c.height=H*dp;let dr=null,ch=null,out={},dirty=0;
   const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  const seg=(a,b,cv)=>{x.strokeStyle=css(cv);x.beginPath();x.moveTo(a[0]*W,a[1]*H);x.lineTo(b[0]*W,b[1]*H);x.stroke()};
-  const pt=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)/W,(e.clientY-r.top)/H]};
-  const wipe=()=>x.clearRect(0,0,W,H);
-  /* coordinate da 0 a 1: il disegno si adatta allo schermo dell'altro telefono */
+  if(!DR.ui.c)DR.ui.c=css('--tx')||'#eceae4';
+  const base=document.createElement('canvas');base.width=c.width;base.height=c.height;const bx=base.getContext('2d');bx.setTransform(dp,0,0,dp,0,0);
+  const rebuild=()=>{bx.clearRect(0,0,W,H);DR.s.forEach(z=>drawStroke(bx,z,W,H));paint()};
+  function paint(){dirty=0;x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,c.width,c.height);x.drawImage(base,0,0);x.setTransform(dp,0,0,dp,0,0);Object.values(DR.cur).forEach(z=>drawStroke(x,z,W,H))}
+  const later=()=>{if(!dirty){dirty=1;requestAnimationFrame(paint)}};
+  const commit=z=>{delete DR.cur[z.id];if(DR.s.some(q=>q.id===z.id))return;DR.s.push(z);drawStroke(bx,z,W,H);later()};
+  const clean=z=>({id:z.id,t:z.t,c:z.c,w:z.w,p:z.p});
+  const tx=(ev,pl)=>{if(ch){try{ch.send({type:'broadcast',event:ev,payload:pl})}catch(e){}}};
+  /* coordinate da 0 a 1 su un foglio 3:4: il disegno è identico sui due telefoni */
   if(paired()){try{ch=sb.channel('disegno-'+AUTH.couple.id,{config:{broadcast:{self:false}}});
-    ch.on('broadcast',{event:'s'},m=>{const q=m&&m.payload;(q&&q.s||[]).forEach(z=>seg(z[0],z[1],z[2]))})
-      .on('broadcast',{event:'clr'},()=>wipe()).subscribe()}catch(e){ch=null}}
-  const add=(a,b)=>{seg(a,b,col);if(ch)buf.push([a.map(v=>+v.toFixed(4)),b.map(v=>+v.toFixed(4)),col])};
+    ch.on('broadcast',{event:'p'},m=>{const q=m&&m.payload;if(!q||!q.id||DR.s.some(z=>z.id===q.id))return;
+        const z=DR.cur[q.id]||(DR.cur[q.id]={id:q.id,t:q.t,c:q.c,w:+q.w||.014,p:[]});(q.p||[]).forEach(v=>z.p.push(v));q.e?commit(z):later()})
+      .on('broadcast',{event:'u'},m=>{const id=m&&m.payload&&m.payload.id;const n=DR.s.length;DR.s=DR.s.filter(z=>z.id!==id);if(DR.s.length!==n)rebuild()})
+      .on('broadcast',{event:'clr'},()=>{DR.s=[];DR.cur={};rebuild()})
+      .on('broadcast',{event:'hi'},()=>{if(!DR.s.length)return;const all=DR.s.map(clean);if(JSON.stringify(all).length<240000)tx('all',{s:all})})
+      .on('broadcast',{event:'all'},m=>{const L=(m&&m.payload&&m.payload.s)||[];let k=0;L.forEach(z=>{if(z&&z.id&&!DR.s.some(q=>q.id===z.id)){DR.s.push(z);k++}});if(k)rebuild()})
+      /* compatibilità con la versione precedente */
+      .on('broadcast',{event:'s'},m=>{const q=m&&m.payload;(q&&q.s||[]).forEach(v=>commit({id:'o'+Math.random(),t:'pen',c:css(v[2])||'#eceae4',w:.008,p:[v[0],v[1]]}))})
+      .subscribe(st=>{if(st==='SUBSCRIBED')tx('hi',{})})}catch(e){ch=null}}
   const iv=setInterval(()=>{if(!el.isConnected){clearInterval(iv);if(ch){try{sb.removeChannel(ch)}catch(e){}ch=null}return}
-    if(ch&&buf.length){const z=buf.splice(0,150);try{ch.send({type:'broadcast',event:'s',payload:{s:z}})}catch(e){}}},80);
-  c.onpointerdown=e=>{dr=1;l=pt(e);try{c.setPointerCapture(e.pointerId)}catch(_){}add(l,[l[0]+.0005,l[1]])};
-  c.onpointermove=e=>{if(!dr)return;const q=pt(e);add(l,q);l=q};
-  c.onpointerup=c.onpointercancel=()=>dr=0;
-  el.querySelectorAll('[data-col]').forEach(b=>b.onclick=()=>{col=b.dataset.col;el.querySelectorAll('[data-col]').forEach(z=>z.classList.toggle('on',z===b))});
-  el.querySelector('#clr').onclick=()=>{wipe();buf=[];if(ch){try{ch.send({type:'broadcast',event:'clr',payload:{}})}catch(e){}}}}
+    if(!ch)return;for(const id in out){const o=out[id];if(!o.p.length&&!o.e)continue;tx('p',{id,t:o.t,c:o.c,w:o.w,p:o.p.splice(0,300),e:o.e&&!o.p.length?1:0});if(o.e&&!o.p.length)delete out[id]}},80);
+  const pt=e=>{const r=c.getBoundingClientRect();return[+((e.clientX-r.left)/W).toFixed(4),+((e.clientY-r.top)/H).toFixed(4)]};
+  const addPt=q=>{const p=dr.p,l=p[p.length-1];if(l&&Math.abs(l[0]-q[0])+Math.abs(l[1]-q[1])<.002)return;p.push(q);if(out[dr.id])out[dr.id].p.push(q)};
+  c.onpointerdown=e=>{if(dr)return;const u=DR.ui;dr={id:uid().slice(0,12),t:u.t,c:u.c,w:u.w,p:[],mine:1};DR.cur[dr.id]=dr;if(ch)out[dr.id]={t:u.t,c:u.c,w:u.w,p:[]};
+    try{c.setPointerCapture(e.pointerId)}catch(_){}addPt(pt(e));later()};
+  c.onpointermove=e=>{if(!dr)return;const L=e.getCoalescedEvents?e.getCoalescedEvents():[e];(L.length?L:[e]).forEach(v=>addPt(pt(v)));later()};
+  c.onpointerup=c.onpointercancel=()=>{if(!dr)return;if(out[dr.id])out[dr.id].e=1;commit(dr);dr=null};
+  const ui=()=>{el.querySelectorAll('[data-dt]').forEach(b=>b.classList.toggle('on',b.dataset.dt===DR.ui.t));el.querySelectorAll('[data-dw]').forEach(b=>b.classList.toggle('on',+b.dataset.dw===DR.ui.w));
+    el.querySelectorAll('[data-dc]').forEach(b=>b.classList.toggle('on',b.dataset.dc===DR.ui.c));const cc=el.querySelector('.sw.cc');if(cc)cc.classList.toggle('on',!DPAL.includes(DR.ui.c))};
+  el.querySelectorAll('[data-dt]').forEach(b=>b.onclick=()=>{DR.ui.t=b.dataset.dt;hap(6);ui()});
+  el.querySelectorAll('[data-dw]').forEach(b=>b.onclick=()=>{DR.ui.w=+b.dataset.dw;hap(6);ui()});
+  el.querySelectorAll('[data-dc]').forEach(b=>b.onclick=()=>{DR.ui.c=b.dataset.dc;if(DR.ui.t==='er')DR.ui.t='pen';hap(6);ui()});
+  const cc=el.querySelector('#dcc');if(cc)cc.oninput=cc.onchange=()=>{DR.ui.c=cc.value;if(DR.ui.t==='er')DR.ui.t='pen';ui()};
+  el.querySelector('#dun').onclick=()=>{for(let i=DR.s.length-1;i>=0;i--)if(DR.s[i].mine){const id=DR.s[i].id;DR.s.splice(i,1);rebuild();tx('u',{id});hap(6);return}};
+  el.querySelector('#clr').onclick=()=>{if(!DR.s.length)return;if(!confirm(paired()?'Cancellare tutto il disegno, anche per '+other()+'?':'Cancellare tutto il disegno?'))return;DR.s=[];DR.cur={};out={};rebuild();tx('clr',{})};
+  el.querySelector('#dsend').onclick=()=>{if(!paired())return toast('Collegatevi in Tu → Account per mandarlo.');if(!DR.s.length)return toast('Disegna qualcosa, prima.');
+    sheet(`<p style="font:1.7rem var(--serif);margin:0 0 .5rem">Per ${esc(other())}.</p><p class="mu" style="margin:0 0 1rem">Arriva anche se non è collegat${other()==='Nunzio'?'o':'a'} adesso, e resta nei vostri Ricordi.</p><input class="fld" id="dtt" maxlength="120" autocomplete="off" placeholder="Un titolo, se vuoi"><button class="card cta tap" data-act="draw-send">${'Mandalo'}</button>`)};
+  rebuild()}
+async function sendDrawing(){if(sendDrawing.b)return;const t=(($('#dtt')||{}).value||'').trim()||'Un disegno';let url;
+  try{url=drawURL()}catch(e){return toast('Non riesco a prepararlo. Riprova.')}
+  if(!/^data:image\/jpeg;base64,/.test(url)||url.length>1400000)return toast('Il disegno è troppo grande.');
+  sendDrawing.b=1;const b=$('[data-act="draw-send"]');if(b)b.textContent='…';
+  const{error}=await safeQ(sb.from('memories').insert({couple_id:AUTH.couple.id,author:me(),title:t.slice(0,120),day:todayKey(),image:url}));
+  sendDrawing.b=0;if(error){if(b)b.textContent='Mandalo';return toast(/image/i.test(error.message||'')?'Manca un passaggio su Supabase.':'Non mandato. Riprova.')}
+  notify({type:'memory',drawing:true});hap([10,40,10]);const sh=$('#sheet');if(sh&&sh.close)sh.close();toast('Mandato. È nei Ricordi.');loadShared(1)}
+async function loadImg(id){if(IMGC[id]||loadImg[id])return;loadImg[id]=1;
+  const{data}=await safeQ(sb.from('memories').select('image').eq('id',id).maybeSingle());loadImg[id]=0;
+  if(data&&/^data:image\/(jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(data.image||'')){IMGC[id]=data.image;document.querySelectorAll('#di-'+id).forEach(e=>e.innerHTML=`<img src="${data.image}" alt="Disegno">`)}
+  else document.querySelectorAll('#di-'+id).forEach(e=>e.innerHTML='<span>Disegno non disponibile.</span>')}
 function initQui(el){const t=el.querySelector('#qt');let f=0;const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);t.textContent=(f=!f)?'Espira.':'Inspira.'},3500*Math.max(K(),.6));t.textContent='Inspira.'}
 /* ============ RELAX ============ */
 const RLX=()=>[['Respira','Un minuto, solo il respiro.','respira'],['Ascolta qualcosa','Vai alla musica.','musica'],['Guarda','Niente da fare, solo guardare.','guarda'],['Scrivi e lascia andare','Scrivi, poi lascialo andare. Non resta niente.','lascia'],['Aprimi quando…','Lettere da aprire nel momento giusto.','lettere']];
@@ -539,8 +599,8 @@ const TR=[['info','mio','Il tuo Uffa.'],['go','custom','Personalizza'],['info','
 /* ============ RICORDI — ricerca, ricordo del giorno, dettaglio ============ */
 let MI=0;
 const norm=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-const hay=r=>norm([r.d,r.t,r.x,r.luogo,(r.tag||[]).join(' '),r.song&&'canzone '+r.song,r.msg&&'messaggio '+r.msg,r.foto&&'foto',r.draw&&'disegno'].concat((r.extra||[]).flat()).filter(Boolean).join(' '));
-const rtags=r=>[r.song&&'Canzone',r.draw&&'Disegno',r.msg&&'Messaggio'].concat((r.extra||[]).map(e=>e[0])).filter(Boolean).map(z=>`<span class="tag">${z}</span>`).join('');
+const hay=r=>norm([r.d,r.t,r.x,r.luogo,(r.tag||[]).join(' '),r.song&&'canzone '+r.song,r.msg&&'messaggio '+r.msg,r.foto&&'foto',(r.draw||r.img)&&'disegno'].concat((r.extra||[]).flat()).filter(Boolean).join(' '));
+const rtags=r=>[r.song&&'Canzone',(r.draw||r.img)&&'Disegno',r.msg&&'Messaggio'].concat((r.extra||[]).map(e=>e[0])).filter(Boolean).map(z=>`<span class="tag">${z}</span>`).join('');
 const rlw=(q,fast)=>{const w=norm(q).trim(),L=DATA.ricordi.map((r,i)=>[r,i]).filter(([r])=>!w||hay(r).includes(w));
   return L.length?`<div class="tl">${L.map(([r,i])=>`<button class="m rv${fast?' in':''}" data-act="mem" data-i="${i}"><div class="mr"><div class="mb"><div class="md"><span class="mu sm">${esc(r.d)}</span>${r.real?'':'<span class="tag">Demo</span>'}</div><b>${esc(r.t)}</b>${r.luogo?`<span class="mu sm" style="display:block;margin-bottom:.4rem">${esc(r.luogo)}</span>`:''}<span class="mu" style="font-size:.92rem;line-height:1.45;display:block">${esc(r.x)}</span>${rtags(r)?`<div class="md" style="margin-top:.6rem;flex-wrap:wrap">${rtags(r)}</div>`:''}</div>${r.foto?'<span class="th2">Foto</span>':''}</div></button>`).join('')}</div>`:'<p class="mu" style="margin-top:2rem;font:italic 1.25rem var(--serif)">Non ho trovato niente qui.</p>'};
 const rdg=()=>{if(!DATA.ricordi.length)return '';const i=Math.floor(Date.now()/864e5)%DATA.ricordi.length,r=DATA.ricordi[i];
@@ -664,7 +724,7 @@ async function loadShared0(quiet){if(!paired())return;const c=AUTH.couple.id,u=m
     safeQ(sb.from('next_meet').select('at').eq('couple_id',c).maybeSingle()),
     safeQ(sb.from('daily_answers').select('user_id,day,answer').eq('couple_id',c).order('day',{ascending:false}).limit(80)),
     safeQ(sb.from('surprises').select('id,author,kind,tone,body,when_label,deliver_at').eq('couple_id',c).order('deliver_at',{ascending:false}).limit(60)),
-    safeQ(sb.from('memories').select('id,author,day,title,place,body').eq('couple_id',c).order('day',{ascending:false})),
+    safeQ(sb.from('memories').select('id,author,day,title,place,body,has_image').eq('couple_id',c).order('day',{ascending:false})).then(r=>r.error?safeQ(sb.from('memories').select('id,author,day,title,place,body').eq('couple_id',c).order('day',{ascending:false})):r),
     safeQ(sb.from('songs').select('id,author,url,title,thumb,note,created_at').eq('couple_id',c).order('created_at',{ascending:false}).limit(100)),
     safeQ(sb.from('game_rounds').select('id,author,game,data,reply,replied_at,created_at').eq('couple_id',c).order('created_at',{ascending:false}).limit(30))]);
   if(L.data)SH.letters=L.data;
@@ -672,7 +732,7 @@ async function loadShared0(quiet){if(!paired())return;const c=AUTH.couple.id,u=m
   if(A.data)SH.answers=A.data;if(G.data)SH.rounds=G.data;if(SG.data)SH.songs=SG.data;
   if(S_.data){SH.sur=S_.data.filter(x=>x.author!==u);SH.mine=S_.data.filter(x=>x.author===u)}
   const pid=AUTH.couple.partner&&AUTH.couple.partner.id;if(pid){const P=await safeQ(sb.from('profiles').select('display_name').eq('id',pid).maybeSingle());if(P.data&&P.data.display_name&&P.data.display_name!==AUTH.couple.partner.name){AUTH.couple.partner.name=P.data.display_name;renderAccountIfOpen()}}
-  if(R.data)DATA.ricordi=R.data.length?R.data.map(m=>({real:1,id:m.id,author:m.author,d:fmtDay(m.day)||'Senza data',t:m.title,x:m.body||'',luogo:m.place||undefined,tag:[]})):DEMO;
+  if(R.data)DATA.ricordi=R.data.length?R.data.map(m=>({real:1,id:m.id,author:m.author,day:m.day,img:m.has_image?1:undefined,d:fmtDay(m.day)||'Senza data',t:m.title,x:m.body||'',luogo:m.place||undefined,tag:[]})):DEMO;
   homeBits();if(!quiet)refreshShared();checkSurprises()}
 function homeBits(){const g=document.querySelector('#gift');if(g&&g.isConnected){const d=dynList()[0];g.dataset.go=d.to;const sp=g.querySelector('span');if(sp)sp.textContent=d.t}
   document.querySelectorAll('#meet').forEach(e=>e.innerHTML=meetHTML());document.querySelectorAll('#dq').forEach(e=>e.innerHTML=dqHTML())}
@@ -866,8 +926,11 @@ const V={
   giochi:()=>`${head('Giochi')}${paired()?remoteHTML():''}${list(GAMES,(g,i)=>`<button class="card tap" style="margin-bottom:.75rem" data-act="play" data-i="${i}"><div class="md" style="justify-content:space-between"><span style="font:1.3rem var(--serif)">${g.t}</span><span class="tag">${g.m}</span></div><p class="mu sm" style="margin:.35rem 0 0">${g.d}</p></button>`)}`,
   gioco:()=>`${head(GAMES[GI].t)}<div id="gm"></div>`,
   disegna:()=>`${head('Disegna insieme')}<canvas id="cv" class="cv"></canvas>
-  <div class="chips w"><button class="chip on" data-col="--tx">Chiaro</button><button class="chip" data-col="--ac">Accento</button><button class="chip" data-col="--ia">Luce</button><button class="chip" id="clr">Cancella</button></div>
-  <p class="mu sm" style="margin:.4rem 0 0">${paired()?'Quello che disegni compare sul telefono di '+esc(other())+' mentre ha Disegna insieme aperto, e viceversa. Cancella pulisce per tutti e due.':'Per ora disegni solo tu. Collegatevi in Tu → Account per disegnare insieme.'}</p>`,
+  <div class="chips dtl" style="padding-top:0">${list(DTOOLS,([k,l])=>`<button class="chip ${DR.ui.t===k?'on':''}" data-dt="${k}">${l}</button>`)}</div>
+  <div class="pal">${list(DSIZES,(w,i)=>`<button class="sz ${DR.ui.w===w?'on':''}" data-dw="${w}" aria-label="Spessore ${i+1}"><i style="width:${[.35,.6,.95][i]}rem;height:${[.35,.6,.95][i]}rem"></i></button>`)}<span style="flex:none;width:.5px;height:1.6rem;background:var(--ln)"></span>
+  ${list(DPAL,c=>`<button class="sw ${DR.ui.c===c?'on':''}" style="background:${c}" data-dc="${c}" aria-label="Colore"></button>`)}<label class="sw cc ${DR.ui.c&&!DPAL.includes(DR.ui.c)?'on':''}" aria-label="Altro colore"><input type="color" id="dcc" value="${DR.ui.c&&!DPAL.includes(DR.ui.c)?DR.ui.c:'#e4d2a6'}"></label></div>
+  <div class="md" style="gap:1.4rem;margin:.2rem 0 0"><button class="mu sm" id="dun" style="min-height:2.75rem">Annulla</button><button class="mu sm" id="clr" style="min-height:2.75rem">Cancella</button><button class="card cta tap" id="dsend" style="margin:0 0 0 auto;padding:.7rem 1.6rem;width:auto">Manda</button></div>
+  <p class="mu sm" style="margin:.6rem 0 0">${paired()?'Quello che disegni compare sul telefono di '+esc(other())+' mentre ha Disegna insieme aperto, e viceversa. Se non c’è, mandaglielo: resta nei vostri Ricordi.':'Per ora disegni solo tu. Collegatevi in Tu → Account per disegnare insieme e mandarvi i disegni.'}</p>`,
   ascolta:()=>`${head('Ascolta insieme')}<div class="duo"><i class="inf"></i><i class="inf"></i></div>
   <p style="font:1.7rem/1.25 var(--serif);margin:1.6rem 0 .6rem">Stessa musica, stesso momento.</p>
   <p class="mu" style="line-height:1.5;margin:0 0 1.4rem">Serve Spotify collegato. Per ora scegliete da dove partire.</p>
@@ -883,7 +946,9 @@ const V={
   <div id="rlw">${rlw('',0)}</div>`,
 
   ricordo:()=>{const n=DATA.ricordi.length,r=DATA.ricordi[MI],P=MI>0?DATA.ricordi[MI-1]:0,N=MI<n-1?DATA.ricordi[MI+1]:0;
+  if(r.img&&!IMGC[r.id])setTimeout(()=>loadImg(r.id),0);
   const S_=[r.foto&&'<div class="fr"><span>Foto demo</span></div>',
+    r.img&&`<div class="fr dimg" id="di-${esc(r.id)}">${IMGC[r.id]?`<img src="${IMGC[r.id]}" alt="Disegno">`:'<span>…</span>'}</div>`,
     r.x&&`<p class="rt">${esc(r.x)}</p>`,
     r.msg&&`<p class="bq">${esc(r.msg)}</p>`,
     r.draw&&'<div class="fr"><svg viewBox="0 0 200 120" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-linecap="round"><path d="M20 80C50 20 80 110 110 60S170 30 180 70"/></svg></div><p class="mu sm" style="margin:-.9rem 0 1.4rem">Disegno demo</p>',
@@ -1027,6 +1092,7 @@ function dynList(){const L=[];
   if(paired()){const rec=SH.sur.filter(x=>Date.now()-new Date(x.deliver_at)<3*864e5);if(rec.length)L.push({t:'Ho qualcosa per te.',to:'sorprese'});
     if(SH.letters.some(l=>l.author!==me()))L.push({t:'Aprimi quando…',to:'lettere'});
     if(SH.songs.some(x=>x.author!==me()&&Date.now()-new Date(x.created_at)<2*864e5))L.push({t:'Una canzone per te.',to:'canzoni'});
+    if(DATA.ricordi!==DEMO&&DATA.ricordi.some(r=>r.img&&r.author!==me()&&r.day&&dayNum(todayKey())-dayNum(r.day)<=1))L.push({t:'Un disegno per te.',to:'ricordi'});
     if(SH.rounds.some(r=>r.author!==me()&&!r.replied_at))L.push({t:'Tocca a te: c’è una sfida.',to:'giochi'});
     if(!SH.answers.some(a=>a.user_id===me()&&a.day===todayKey()))L.push({t:'C’è una domanda per oggi.',to:'domanda'})}
   return L.concat(DYN)}
@@ -1089,6 +1155,7 @@ document.addEventListener('click',e=>{
   else if(a==='mem-save')saveMemory();
   else if(a==='mem-del')delShared('memories',t.dataset.id,1);
   else if(a==='chat-clear')sheet('<p style="font:1.6rem var(--serif);margin:0 0 .5rem">Cancellare la conversazione?</p><p class="mu" style="margin:0 0 1rem">Sparisce da questo telefono e non si può recuperare.</p><button class="card cta tap" data-act="chat-clear-yes">Cancella</button>');
+  else if(a==='draw-send')sendDrawing();
   else if(a==='pm-yes')memAnswer(true);
   else if(a==='pm-no')memAnswer(false);
   else if(a==='pm-del'){MEMS.splice(+t.dataset.i,1);savePM();rerender()}
