@@ -296,12 +296,56 @@ const QUICK=['Ho bisogno di staccare','Consigliami una canzone','Giochiamo','Vog
 const other=()=>(AUTH.couple&&AUTH.couple.partner&&AUTH.couple.partner.name)||(NAME==='Francesca'?'Nunzio':'Francesca');
 const greet=()=>{const h=new Date().getHours();return h<5?'È tardi.':h<12?'Buongiorno.':h<18?'Ciao.':'Buonasera.'};
 /* acts: [etichetta, schermata] oppure [etichetta, '!azione'] */
+/* memoria di Parlami: solo su questo telefono, e solo quello che lei sceglie di far ricordare */
+const MEMS=(()=>{try{return JSON.parse(localStorage.getItem('uffa_mem')||'[]')}catch(e){return[]}})();
+const savePM=()=>{try{localStorage.setItem('uffa_mem',JSON.stringify(MEMS.slice(-60)))}catch(e){}};
+let FLOW=null,PENDMEM=null;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const sx=()=>NAME==='Nunzio'?'o':'a';
+/* contesto vero: solo dati che esistono già nell'app */
+const meetD=()=>paired()&&SH.meet?dayNum(SH.meet)-dayNum(todayKey()):-1;
+const meetSay=()=>{const d=meetD();return d<0?'':d===0?'Oggi vi vedete.':d===1?'Domani vi vedete.':`Mancano ${d} giorni a quando vi rivedete.`};
+function newsForGreet(){if(!paired())return [];const n=[];
+  if(SH.rounds.some(r=>r.author!==me()&&!r.replied_at))n.push(['C’è una sfida che ti aspetta.',['Giochi','giochi']]);
+  if(SH.songs.some(x=>x.author!==me()&&Date.now()-new Date(x.created_at)<2*864e5))n.push([`${other()} ti ha mandato una canzone.`,['Ascoltala','canzoni']]);
+  if(!SH.answers.some(a=>a.user_id===me()&&a.day===todayKey()))n.push(['C’è ancora la domanda di oggi.',['La domanda di oggi','domanda']]);
+  return n}
+function letterFor(re){if(!paired())return [];const L=SH.letters.filter(l=>l.author!==me());if(!L.length)return [];
+  const f=L.find(l=>re&&re.test(norm(l.occasion||'')));return [[f?f.occasion:'Aprimi quando…','lettere']]}
+const realMem=()=>(paired()&&DATA.ricordi!==DEMO&&DATA.ricordi.length)?pick(DATA.ricordi):null;
+const memHint=()=>{const L=MEMS.filter(m=>m.k==='piace');return L.length&&Math.random()<.6?` Mi avevi detto che ti piace ${pick(L).v}. Magari adesso aiuta.`:''};
+function memCapture(raw){if(raw.length>80||/\?/.test(raw))return null;
+  const m=raw.trim().match(/^(?:a me\s+)?(mi piace|mi piacciono|adoro|non sopporto|detesto|non mi piace|non mi piacciono)\s+(.{2,60}?)[\s.!…]*$/i);if(!m)return null;
+  const k=/^(non|detesto)/i.test(m[1])?'no':'piace',v=m[2].trim();
+  if(MEMS.some(x=>x.k===k&&norm(x.v)===norm(v)))return {text:'Lo so già. Ce l’ho segnato.'};
+  PENDMEM={k,v};return {text:`Vuoi che me lo ricordi? «${k==='no'?'Non ti piace':'Ti piace'} ${v}». Resta solo su questo telefono.`,acts:[['Sì, ricordalo','!pm-yes'],['No','!pm-no']]}}
+function memAnswer(yes){if(!PENDMEM)return;if(yes){MEMS.push({...PENDMEM,at:Date.now()});savePM()}PENDMEM=null;
+  const m={role:'assistant',text:yes?'Me lo ricordo. Lo trovi in “Cosa so di te”, e puoi cancellarlo quando vuoi.':'Va bene, lo lascio andare.',acts:yes?[['Cosa so di te','memoria']]:[]};
+  CHAT.push(m);saveChat();push(msgHTML(m))}
+function bella(){const o=[];const r=realMem();if(r)o.push(`Ti ricordi? «${r.t}», ${r.d}.`);
+  const L=paired()?SH.letters.filter(l=>l.author!==me()):[];if(L.length)o.push(`${other()} ti ha lasciato ${L.length===1?'una lettera':L.length+' lettere'}. Sono lì, quando vuoi.`);
+  if(meetD()>=0)o.push(meetSay());if(NAME!=='Nunzio')o.push(`${other()} ha costruito questo posto per te. Non è poco.`);
+  if(!o.length)o.push('Sei qui e cerchi una cosa bella. È già un buon segno.');
+  FLOW={n:'bella'};return {text:pick(o)+' E tu? Una cosa bella di oggi, anche minuscola.',acts:(r?[['Ricordi','ricordi']]:[]).concat(L.length?[['Aprimi quando…','lettere']]:[])}}
+/* percorsi guidati: poche domande, una alla volta, e si esce quando si vuole */
+const FLOWS={
+  sfogo(raw){const s=FLOW.s||0;
+    if(s===0){FLOW.s=1;return {text:raw.length>120?'Grazie per avermelo detto. Tra tutto questo, cosa pesa di più?':pick(['Ti ascolto. Cosa ti pesa di più, in questo?','Capisco. Da quanto ti senti così?','Vai avanti. Qual è la parte più difficile?'])}}
+    if(s===1){FLOW.s=2;return {text:'Grazie. Adesso ti serve solo qualcuno che ascolti, o vuoi pensare a cosa fare?',acts:[['Solo ascoltami','?Solo ascoltami'],['Pensiamoci','?Pensiamoci']]}}
+    if(s===2){if(/pens|fare|risolv|consigl|aiut/.test(norm(raw))){FLOW.s=3;return {text:'Allora una cosa sola, non tutto: qual è il passo più piccolo che potresti fare domani?'}}
+      FLOW={n:'ascolto',c:0};return {text:'Va bene. Continua pure, io ascolto e basta.'}}
+    FLOW=null;return {text:`Mi sembra un buon inizio. Piccolo va benissimo. Se ti va, raccontalo anche a ${other()}, oppure scrivilo e lascialo andare.`,acts:[['Ti penso','tipenso'],['Scrivi e lascia andare','lascia']]}},
+  ascolto(){FLOW.c=(FLOW.c||0)+1;if(FLOW.c>=5){FLOW=null;return {text:`Ti ho ascoltat${sx()}. Come ti senti adesso, rispetto a prima?`}}
+    return {text:['Ti ascolto.','Vai avanti, non ho fretta.','Sono qui.','Capisco. E poi?','Mh. Continua.'][FLOW.c%5]}},
+  notte(){FLOW=null;const m=meetSay();return {text:`Tienila con te, allora.${m?' '+m:''} Se vuoi, manda un segnale a ${other()} prima di dormire. Buonanotte.`,acts:[['Ti penso','tipenso']]}},
+  bella(){FLOW=null;return {text:`Bella. Tienila per quando serve, o raccontala a ${other()}.`,acts:[['Ti penso','tipenso']]}}
+};
 const MOCK={
-  'Ho bisogno di staccare':{text:'Allora fermiamoci un momento. Niente da risolvere adesso. Un minuto di respiro, o solo guardare qualcosa di calmo?',acts:[['Respira','respira'],['Guarda','guarda']]},
-  'Consigliami una canzone':{text:'Quando la musica sarà collegata potrò consigliartela davvero. Intanto scegli il tipo di momento.',acts:[['Musica','musica']]},
-  'Giochiamo':{text:'Volentieri. Ce ne sono dieci, da trenta secondi a qualche minuto.',acts:[['Giochi','giochi']]},
-  'Voglio parlare':{text:'Ci sono. Comincia da dove vuoi, anche a metà.'},
-  'Voglio stare da sola':{text:'Va bene. Nessuna fretta e nessuna risposta da dare. Resto qui, in silenzio, finché vuoi.'}
+  'Ho bisogno di staccare':()=>({text:'Allora fermiamoci un momento. Niente da risolvere adesso. Un minuto di respiro, o solo guardare qualcosa di calmo?',acts:[['Respira','respira'],['Guarda','guarda']]}),
+  'Consigliami una canzone':()=>songPick()||{text:paired()?`Non ho ancora canzoni di ${other()} da proporti. Intanto scegli il tipo di momento.`:'Intanto scegli il tipo di momento.',acts:[['Musica','musica']]},
+  'Giochiamo':()=>({text:'Volentieri. Ce ne sono dieci, da trenta secondi a qualche minuto.'+(paired()&&SH.rounds.some(r=>r.author!==me()&&!r.replied_at)?' E c’è una sfida che ti aspetta.':''),acts:[['Giochi','giochi']]}),
+  'Voglio parlare':()=>{FLOW={n:'sfogo',s:0};return {text:'Ci sono. Comincia da dove vuoi, anche a metà.'}},
+  'Voglio stare da sola':()=>{FLOW=null;return {text:'Va bene. Nessuna fretta e nessuna risposta da dare. Resto qui, in silenzio, finché vuoi.'}}
 };
 /* momenti seri: vengono prima di tutto. Numeri verificati a settembre 2026 */
 const CRISIS=/\b(suicid|uccidermi|ammazzarmi|togliermi la vita|farla finita|non voglio piu vivere|non voglio vivere|voglio morire|vorrei morire|vorrei essere mort|farmi del male|tagliarmi|autolesion|meglio se non ci fossi|meglio senza di me|non ha piu senso vivere|sparire per sempre)/;
@@ -309,17 +353,27 @@ const HELP=()=>[['Chiama Telefono Amico','tel:0223272327'],['Chiama il 112','tel
 const INT=[
   {k:CRISIS,r:()=>({crisis:true,text:`Mi fermo un attimo, perché quello che hai scritto è importante. Non devi portarlo tutto tu. Se senti di poterti fare del male adesso, chiama il 112. Se vuoi parlare con qualcuno, Telefono Amico risponde a qualsiasi ora al 02 2327 2327, e su WhatsApp al 324 011 7252 dalle 18 alle 21. E puoi far sapere a ${other()} che ti serve, senza spiegare niente.`,acts:HELP()})},
   {k:/\b(chi sei|sei vera|sei vero|sei un.?ai|sei un robot|sei un bot|intelligenza artificiale)/,r:()=>({text:'Sono la parte di Uffa. che ascolta. Per ora rispondo in modo semplice: le risposte sono preparate qui nel telefono, non c’è un’intelligenza artificiale collegata.'})},
-  {k:/\b(mi manchi|mi manca|lontan|distanza|vorrei che fossi qui)/,r:()=>({text:'Succede. Non serve che sia un problema: a volte basta farglielo sapere.',acts:[['Ti penso','tipenso']].concat(letAct())})},
-  {k:/\b(triste|giu|piango|piangere|sto male|ansia|ansios|preoccupat|stress|pesante|non ce la faccio)/,r:()=>({text:`Mi dispiace. Non devi spiegare tutto, anche due parole vanno bene. Se ti pesa, puoi scriverlo e lasciarlo andare, oppure far sapere a ${other()} che ti serve.`,acts:[['Scrivi e lascia andare','lascia'],['Ho bisogno di te','!need']].concat(letAct())})},
+  {k:/\b(ti amo|ti voglio bene|ti adoro)\b/,r:()=>({text:`Questa è una cosa da far arrivare a ${other()}, non a me.`,acts:[['Ti penso','tipenso']]})},
+  {p:1,k:/cosa (sai|ricordi) di me|cosa ti ricordi di me/,r:()=>MEMS.length?{text:'So solo quello che mi hai chiesto di ricordare: '+MEMS.slice(-4).map(m=>(m.k==='no'?'non ti piace ':'ti piace ')+m.v).join(', ')+'.',acts:[['Cosa so di te','memoria']]}:{text:'Niente, per ora. Se mi dici cosa ti piace, ti chiedo se vuoi che me lo ricordi. Solo qui.'}},
+  {p:1,k:/quanto manca|quando ci (vediamo|rivediamo)|quando (lo|la) (vedo|rivedo)|prossimo incontro/,r:()=>!paired()?{text:'Quando vi collegate in Tu → Account potete segnare il prossimo incontro.'}:meetSay()?{text:meetSay(),acts:[['Incontro','incontro']]}:{text:'Non avete ancora segnato una data. Potete farlo qui.',acts:[['Quando vi rivedete?','incontro']]}},
+  {k:/litigat|abbiamo discusso|ce l.?ho con (lui|lei)|arrabbiat[ao] con (lui|lei|te)/,r:()=>{FLOW={n:'sfogo',s:0};return {text:'Succede, anche a chi si vuole bene tanto. Vuoi raccontarmi com’è andata? Resta qui.'}}},
+  {p:1,k:/^(buona ?notte|notte)\b|vado a (dormire|letto)/,r:()=>{FLOW={n:'notte'};return {text:'Buonanotte. Prima di chiudere: una cosa andata bene oggi, anche piccola?'}}},
+  {p:1,k:/non riesco a dormire|non dormo|insonnia/,r:()=>({text:'Allora niente di pesante. Un minuto di respiro lento aiuta più di quanto sembri.',acts:[['Respira','respira']].concat(letterFor(/dorm|sonno|notte/))})},
+  {p:1,k:/(dimmi|raccontami) (una cosa|qualcosa) di bell|una cosa bella|tirami su|consolami/,r:bella},
+  {k:/\b(mi manchi|mi manca|lontan|distanza|vorrei che fossi qui)/,r:()=>({text:'Succede. Non serve che sia un problema: a volte basta farglielo sapere.'+(meetSay()?' '+meetSay():''),acts:[['Ti penso','tipenso']].concat(letterFor(/manc/))})},
+  {k:/\b(triste|giu|piango|piangere|sto male|ansia|ansios|preoccup|stress|pesante|non ce la faccio)/,r:()=>({text:`Mi dispiace. Non devi spiegare tutto, anche due parole vanno bene. Se ti pesa, puoi scriverlo e lasciarlo andare, oppure far sapere a ${other()} che ti serve.`+memHint(),acts:[['Scrivi e lascia andare','lascia'],['Ho bisogno di te','!need']].concat(letterFor(/stort|trist|giu|male|pian/))})},
+  {k:/esam|interrogazion|colloqui|studi|lavoro|ufficio|scadenz|consegn/,r:()=>({text:'Sembra un periodo pieno. È una cosa che ti preoccupa, o che ti stanca?',acts:[['Mi preoccupa','?Mi preoccupa'],['Mi stanca','?Mi stanca']]})},
   {k:/\b(arrabbiat|nervos|incazzat|furios|odio|che palle|uffa)/,r:()=>({text:'Capito. Buttalo fuori, qui o altrove. Poi lo lasciamo andare.',acts:[['Scrivi e lascia andare','lascia']]})},
-  {k:/\b(stanc|sonno|esaust|distrutt|stremat|dormire)/,r:()=>({text:'Allora rallentiamo. Un minuto di respiro, niente di più.',acts:[['Respira','respira'],['Guarda','guarda']]})},
-  {k:/\b(annoi|noia|che faccio|non so cosa fare)/,r:()=>({text:'Proviamo qualcosa di stupido. Alcuni giochi durano trenta secondi.',acts:[['Giochi','giochi']]})},
-  {k:/\b(musica|canzon|ascoltare)/,r:()=>({text:'La musica non è ancora collegata, quindi non posso sceglierla io. Da Musica puoi decidere il tipo di momento.',acts:[['Musica','musica']]})},
-  {k:/\b(ricord|ti ricordi)/,r:()=>({text:'I ricordi sono in una stanza tutta loro.',acts:[['Ricordi','ricordi']]})},
+  {k:/\b(stanc|sonno|esaust|distrutt|stremat|dormire)/,r:()=>({text:'Allora rallentiamo. Un minuto di respiro, niente di più.'+memHint(),acts:[['Respira','respira'],['Guarda','guarda']]})},
+  {k:/\b(annoi|noia|che faccio|non so cosa fare)/,r:()=>({text:'Proviamo qualcosa di stupido. Alcuni giochi durano trenta secondi.'+(paired()&&SH.rounds.some(r=>r.author!==me()&&!r.replied_at)?' E c’è una sfida che ti aspetta.':memHint()),acts:[['Giochi','giochi']]})},
+  {k:/\b(che fai|cosa fai|che stai facendo)\b/,r:()=>({text:'Ti aspettavo. Tu?'})},
+  {k:/\b(ho fame|fame|mangiare|cena|pranzo)\b/,r:()=>({text:'Allora vai a mangiare qualcosa di buono. Io resto qui.'})},
+  {k:/\b(musica|canzon|ascoltare)/,r:()=>songPick()||({text:paired()?`Non ho ancora canzoni di ${other()} da proporti. Puoi mandargliene una tu, o scegliere il tipo di momento.`:'Da Musica puoi scegliere il tipo di momento.',acts:[['Musica','musica']].concat(paired()?[['Manda una canzone','canzone']]:[])})},
+  {k:/\b(ricord|ti ricordi)/,r:()=>{const m=realMem();return m?{text:`Ti ricordi? «${m.t}», ${m.d}.`+(m.x?' '+(m.x.length>120?m.x.slice(0,120)+'…':m.x):''),acts:[['Ricordi','ricordi']]}:{text:'I ricordi sono in una stanza tutta loro.',acts:[['Ricordi','ricordi']]}}},
   {k:/\b(felice|contenta|contento|bella giornata|che bello|sto bene|benissimo)/,r:()=>({text:'Mi fa piacere. Raccontami la parte migliore.'})},
   {k:/\bcome stai\b/,r:()=>({text:'Sono qui, e mi basta. Tu come stai?'})},
   {k:/\b(grazie)/,r:()=>({text:'Quando vuoi.'})},
-  {k:/^(ciao|ehi|hey|buongiorno|buonasera|salve)\b/,r:()=>({text:greet()+' Come stai, davvero?'})}
+  {k:/^(ciao|ehi|hey|buongiorno|buonasera|salve)\b/,r:()=>{const n=newsForGreet(),d=meetD(),m=d>=0&&d<=3?' '+meetSay():'';return n.length?{text:greet()+m+' '+n[0][0]+' Ma prima: come stai, davvero?',acts:[n[0][1]]}:{text:greet()+m+' Come stai, davvero?'}}}
 ];
 const GEN=['Ti ascolto.','Vai avanti, non ho fretta.','Capisco. Che cosa senti, in questo momento?','Dimmi di più, se ti va.','E tu come stai, in tutto questo?'];
 let gi=0;
@@ -328,9 +382,15 @@ const Assistant={
   async reply(history){
     const raw=history[history.length-1].text;
     await wait(700+Math.min(1400,raw.length*12));
-    if(raw==='Consigliami una canzone'){const sp=songPick();if(sp)return sp}
-    if(MOCK[raw])return MOCK[raw];
     const t=norm(raw);
+    if(CRISIS.test(t)){FLOW=null;PENDMEM=null;return INT[0].r()}
+    if(PENDMEM){if(/^(si|ok|va bene|certo|ricordalo|sì)\b/.test(t)){const p=PENDMEM;PENDMEM=null;MEMS.push({...p,at:Date.now()});savePM();return {text:'Me lo ricordo. Lo trovi in “Cosa so di te”.',acts:[['Cosa so di te','memoria']]}}
+      if(/^no\b/.test(t)){PENDMEM=null;return {text:'Va bene, lo lascio andare.'}}PENDMEM=null}
+    if(MOCK[raw])return MOCK[raw]();
+    if(FLOW){if(/^(basta|stop|lascia stare|lascia perdere|niente|fine)\b/.test(t)){FLOW=null;return {text:'Va bene. Sono qui, se ti serve.'}}
+      const pr=INT.find(x=>x.p&&x.k.test(t));if(pr){FLOW=null;return pr.r()}
+      const f=FLOWS[FLOW.n];if(f){const r=f(raw);if(r)return r}}
+    const mc=memCapture(raw);if(mc)return mc;
     for(const x of INT)if(x.k.test(t))return x.r();
     if(history.slice(-8).some(m=>m.crisis))return {crisis:true,text:`Sono qui. Hai sentito qualcuno? Telefono Amico risponde a qualsiasi ora al 02 2327 2327, e ${other()} è a un segnale di distanza.`,acts:HELP()};
     if(raw.length>140)return {text:'Grazie per avermelo detto. Tra tutto questo, cosa pesa di più?'};
@@ -343,7 +403,7 @@ const CHAT=(()=>{try{return JSON.parse(localStorage.getItem('uffa_chat')||'[]')}
 const saveChat=()=>{try{localStorage.setItem('uffa_chat',JSON.stringify(CHAT.slice(-80)))}catch(e){}};
 let busy=false;
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const actHTML=a=>(a&&a.length)?`<div class="chips w">${a.map(([l,to])=>to.startsWith('tel:')?`<a class="chip" href="${esc(to)}">${esc(l)}</a>`:to.startsWith('https://')?`<a class="chip" href="${esc(to)}" target="_blank" rel="noopener">${esc(l)}</a>`:to[0]==='!'?`<button class="chip" data-act="${to.slice(1)}">${esc(l)}</button>`:`<button class="chip" data-go="${to}">${esc(l)}</button>`).join('')}</div>`:'';
+const actHTML=a=>(a&&a.length)?`<div class="chips w">${a.map(([l,to])=>to.startsWith('tel:')?`<a class="chip" href="${esc(to)}">${esc(l)}</a>`:to.startsWith('https://')?`<a class="chip" href="${esc(to)}" target="_blank" rel="noopener">${esc(l)}</a>`:to[0]==='?'?`<button class="chip" data-act="quick" data-q="${esc(to.slice(1))}">${esc(l)}</button>`:to[0]==='!'?`<button class="chip" data-act="${to.slice(1)}">${esc(l)}</button>`:`<button class="chip" data-go="${to}">${esc(l)}</button>`).join('')}</div>`:'';
 const msgHTML=m=>`<div class="b ${m.role==='user'?'u':'a'}">${esc(m.text)}${m.role==='user'?'':actHTML(m.acts)}</div>`;
 function push(h){const m=$('.msgs');if(!m)return null;m.insertAdjacentHTML('beforeend',h);m.scrollTo({top:m.scrollHeight,behavior:K()<.1?'auto':'smooth'});return m.lastElementChild}
 async function send(text){
@@ -469,7 +529,7 @@ function prepLocal(){const tx=($('#st').value||'').trim();if(!tx&&/^(Messaggio|D
 const tuS=(t,x)=>`<p style="font:1.7rem var(--serif);margin:0 0 .6rem">${t}</p><p class="mu" style="margin:0;line-height:1.5">${x}</p>`;
 const TU={
   mio:()=>tuS('Il tuo Uffa.',`${S.pal==='custom'?'Custom':PAL[S.pal].n} · ${OPT.atm[1].find(o=>o[0]===S.atm)[1]} · ${FONTS[S.font].n}. Cambia tutto da Personalizza.`),
-  ricorda:()=>tuS('Cosa ricorda Uffa.','Sul server, visibili solo a voi due: account, nomi, il vostro collegamento, i segnali, le lettere, le risposte alla domanda del giorno, le sorprese, i ricordi e il prossimo incontro. Su questo telefono: le impostazioni e la conversazione di Parlami, che non esce mai dal telefono e puoi cancellare quando vuoi.'),
+  ricorda:()=>tuS('Cosa ricorda Uffa.','Sul server, visibili solo a voi due: account, nomi, il vostro collegamento, i segnali, le lettere, le risposte alla domanda del giorno, le sorprese, i ricordi e il prossimo incontro. Su questo telefono: le impostazioni, la conversazione di Parlami e le poche cose che chiedi a Parlami di ricordare. Non escono mai dal telefono e puoi cancellarle quando vuoi.'),
   privacy:()=>tuS('Privacy','Nessuna posizione tracciata. Nessun “online” o “ultimo accesso”. Nessun indicatore di digitazione. Quello che scrivi in Parlami resta qui. In futuro potrai proteggere Uffa. con Face ID.'),
   notifiche:()=>tuS('Notifiche','Non sono ancora attive. Quando lo saranno, arriveranno solo cose che hai scelto: niente online, niente posizione, niente notifiche insistenti.'),
   account:()=>tuS('Account','Nessun account in questo prototipo. In futuro: accesso con Apple, collegamento dei due telefoni con QR code o codice manuale, recupero dell’account con Apple.')
@@ -774,12 +834,15 @@ const V={
   <div class="chips w" style="justify-content:center">${list(SIG.slice(0,4),(z,i)=>`<button class="chip ${i===SI?'on':''}" data-act="sig" data-i="${i}">${z[0]} ${z[1]}</button>`)}</div></div>
   <p class="mu sm" style="text-align:center;opacity:.6">${paired()?'Nessun obbligo di risposta.':'Nessun obbligo di risposta. Finché non vi collegate in Tu → Account, il segnale resta su questo telefono.'}</p>`,
 
-  parlami:()=>`<div class="bar"><button class="bk" data-act="back" aria-label="Indietro">${I.bk}</button>${CHAT.length?'<button class="mu sm" style="margin-left:auto;padding:.6rem 0 .6rem .8rem" data-act="chat-clear">Cancella</button>':''}</div>
+  parlami:()=>`<div class="bar"><button class="bk" data-act="back" aria-label="Indietro">${I.bk}</button><span style="margin-left:auto;display:flex;gap:1.1rem">${MEMS.length?'<button class="mu sm" style="padding:.6rem 0" data-go="memoria">Cosa so</button>':''}${CHAT.length?'<button class="mu sm" style="padding:.6rem 0 .6rem .8rem" data-act="chat-clear">Cancella</button>':''}</span></div>
   <h1 style="margin-bottom:.3rem">Parlami.</h1><p class="hi" style="margin:0">Sono qui.</p><p class="mu" style="font-size:.78rem;margin:.5rem 0 .9rem;opacity:.75">Quello che scrivi qui rimane qui.</p>
   <p class="mu" style="font-size:.72rem;margin:-.6rem 0 .9rem;opacity:.55">Versione di anteprima · le risposte sono simulate</p>
   <div class="msgs">${CHAT.length?CHAT.map(msgHTML).join(''):`<div class="b a">${greet()} Come stai, davvero?</div>`}</div>
   <div class="chips">${list(QUICK,q=>`<button class="chip" data-act="quick" data-q="${q}">${q}</button>`)}</div>
   <div class="dock"><input id="ci" placeholder="Scrivi qui" enterkeyhint="send" autocomplete="off"><button class="snd" data-act="send" aria-label="Invia">${I.up}</button></div>`,
+
+  memoria:()=>`${head('Cosa so di te')}<p class="hi" style="margin:-.8rem 0 .3rem">Solo quello che mi hai chiesto di ricordare.</p><p class="mu sm" style="margin:0 0 1.6rem">Resta su questo telefono. Non lo vede nessuno, nemmeno ${esc(other())}.</p>
+  ${MEMS.length?MEMS.map((m,i)=>`<div class="card row"><span>${m.k==='no'?'Non ti piace':'Ti piace'} ${esc(m.v)}</span><button class="mu sm" style="min-height:2.75rem;padding-left:.8rem" data-act="pm-del" data-i="${i}">Dimentica</button></div>`).join('')+'<button class="mu sm" style="margin-top:1.2rem;min-height:2.75rem" data-act="pm-clear">Dimentica tutto</button>':'<p class="mu">Ancora niente. Se in Parlami scrivi “mi piace…” o “non sopporto…”, ti chiedo se vuoi che me lo ricordi.</p>'}`,
 
   musica:()=>`${head('Musica.')}<p class="hi" style="margin:-.7rem 0 1.4rem">Che cosa vuoi ascoltare?</p>
   ${paired()?`<div class="set"><label>Canzoni condivise</label>${SH.songs.length?SH.songs.slice(0,3).map(songHTML).join('')+(SH.songs.length>3?'<button class="card row tap" data-go="canzoni">Tutte le vostre canzoni<span class="mu">›</span></button>':''):'<p class="mu" style="margin:0 0 .6rem">Ancora nessuna. Manda la prima.</p>'}
@@ -1026,7 +1089,12 @@ document.addEventListener('click',e=>{
   else if(a==='mem-save')saveMemory();
   else if(a==='mem-del')delShared('memories',t.dataset.id,1);
   else if(a==='chat-clear')sheet('<p style="font:1.6rem var(--serif);margin:0 0 .5rem">Cancellare la conversazione?</p><p class="mu" style="margin:0 0 1rem">Sparisce da questo telefono e non si può recuperare.</p><button class="card cta tap" data-act="chat-clear-yes">Cancella</button>');
-  else if(a==='chat-clear-yes'){CHAT.length=0;saveChat();const sh=$('#sheet');if(sh&&sh.close)sh.close();const tp=stack[stack.length-1];if(tp&&tp.n==='parlami')tp.el.innerHTML=V.parlami();toast('Cancellata.')}
+  else if(a==='pm-yes')memAnswer(true);
+  else if(a==='pm-no')memAnswer(false);
+  else if(a==='pm-del'){MEMS.splice(+t.dataset.i,1);savePM();rerender()}
+  else if(a==='pm-clear')sheet('<p style="font:1.6rem var(--serif);margin:0 0 .5rem">Dimenticare tutto?</p><p class="mu" style="margin:0 0 1rem">Sparisce da questo telefono e non si può recuperare.</p><button class="card cta tap" data-act="pm-clear-yes">Dimentica tutto</button>');
+  else if(a==='pm-clear-yes'){MEMS.length=0;savePM();const sh=$('#sheet');if(sh&&sh.close)sh.close();rerender();toast('Dimenticato.')}
+  else if(a==='chat-clear-yes'){CHAT.length=0;saveChat();FLOW=null;PENDMEM=null;const sh=$('#sheet');if(sh&&sh.close)sh.close();const tp=stack[stack.length-1];if(tp&&tp.n==='parlami')tp.el.innerHTML=V.parlami();toast('Cancellata.')}
   else if(a==='auth-mode'){AUTH.mode=t.dataset.v;AUTH.err='';renderAccountIfOpen()}
   else if(a==='auth-submit')authSubmit();
   else if(a==='logout')authLogout();
