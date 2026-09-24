@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="it" data-theme="dark" data-card="soft">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Uffa.">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAG50lEQVR42u3deWxTdQDA8bfXY13XrVu7dhuUUXAcm+EQhCEDQRAwwEQQBE8kBkG5EsMl/gEYAwQEJQqSgFEgCooSQhaIA+SYjkNlHOMajLEBuzfWsbEesPoHiXaFPtjatQW+n+yfvr6+/vbyXd/vPUpeiCYiSgDuR2QXgDhAHCAOEAeIA8QB4gBxgDhAHABxgDhAHCAOEAeIA8QB4gBxgDgA4gBxgDhAHCAOEAeIA8QB4gBxAMQB4gBxgDhAHCAOEAeIA8QB4gBxAMQB4gBxgDgQEPIAvveOjQs6J5p8uMFFK7Zs3ZHZvNf275O8fuV0LwdQbanrM3wOnxzgsNKScs4XlpRVO51O7zdlszsuXi4qLr3R7C1U3ag9e+Fq3S1rs7dQUVmTnXP5cYojJOB3agpTKdslxLr+mBOM6rBQiZeUllfnF5b+/1NQWlRa1dDg9Ml4YvSRZpOxbRtjW5PB3MZobhOb0DpGpVK6rmO1OQquljUaQ2FpbZ31MfvkCAnC23hFazWHdy339GzGgeyZn6z353gSTIaMnxa7Lhn97pJzF69xWAFzDoA4QBwgDhAHiAPEAeIAcYA4QBwAcYA4QBwgDhAHiAPEAeIAcYA4AOIAcYA4QBwgDhAHiAPEAeIAcYA4AOIAcYA4QBwgDhAHiONx5nQSR6B2vSC17+VymZ/HI5e5v6PN7iCOwLDZpHZ9qFLh5/GoVO7vaLURR6DikPy7jNCE+Xk8kRq125J6q404AqOhwSlx9wJjTJSfxxMfG+360O64bam5RRwBI3FzDENMpFLh13sImdsYXR+WlN1wPhkz0iCN41pxpaenZKKY2D7en4PpkmRuNLaiCk5lAyk377rEs92S2/ltJAqFvNvTjeLIOV9IHIF0Iidf4tnU3kl+G0nfZzuHq1WuS06fKyCOQPrnVN6dOw2enu2Xkuy3c5axaX1dH95paDiWfZE4AslSU3f0eK7HCw+hirShvfwwjASTYXD/bo2qPXnJUlNHHAG2a+/fEs9OfmuoouXPWRbMHCuKIa5Ldu87LjwxgjeO9D1/VVXXer72oHvvjRdbdACjXkoZmNrFdcnN2vodu488OXHIg3ZkVptj87b9syaneVph2qThmUfOnrnQIucOXZLaLp7zutvCrTsy66127zceoQl7e9wLQwZ0v3sF5crVsowD2Zu37Q+2+0sG490hXecWu35c2CpO52mF8krLhCmfX/d8UaR5uiWb138xI7LxnLequnbY+IU3a+u93HjnRNM3Kz6IN0a7LS8qqZo6d21uXhGHlYf98Ph05VaJFQx67ZZ1s317z/Nxaamb134Uec/Z0PKvt3tfhkGv3bBq+r1lCILQKk63YdUMvS4yePa/TBmqCuY+rlwtC1eHPtOlvacVwtWq0SP62GyO0+cKvLyq/ZQ5buWiSRPHD5LJ3P9mdv527Ktv073/deZNH9O7R0eJ30UdpjyYlcNh5aH7lYlrlk5xmxveN6N1G3fv3ne8qV+2EMWQlB4dJ7zy/JAB3d3OTe46dfbKxBlfej/bEMWQI7tWREaopc/hnxsx11d313784xAEQamQr1k2tX+f5AeuWVNbfygrJ/Po2ZzzBfmFpZ72skIhb982NqmDKaVHp34pSQa91tMGz1wonDRzdY3XBxRBEGL0kX/sXPbA1fq9PL+isoY4mnJaJZd9PHPsm68OePiX2B23S8uryyss9Va73XFbFENClYoITZhBr9XrImTig+dbew6emP/ZJonvDzR1wpG5c+kDV0tNm19ZRRxNN3JorwWzxumiNC0+F7baV29I/37rPh/+67wohmSlL4/Shkusc8NSmzpyXpAcVoJ9QuomN6/ol/SscLWqU2Lre6eNPuF0OvceOvnh/HWHDp/x9ZaFOGN012SzxDq/pmcd9PX7PimfHP8xxmgnjh80alhKjN5n535WmyPjQPaGHzJa7mKDLkqz/bsFccb77/OSsuoxk5ZIXBcmjqZ87oliSs9Og/t3TenZMdHczG8AVVvqjh7P3f/n6T0HT/hqeiEhsV38+pXT4mPdr+wVlVS9P3vNpfzi4Nm9j3YcrvTREZ07mDq0i29vjo81aA06rS46Qh2mVCoVSoXcKTjt9tt2u8Ny81Z5ZU15haXwevnFy8UX8q5dyi/28zFeE65657VBQwd2N5uMgiBcuVaWceDEpp9/5/I5Hhn8jzcQB4gDxAHiAHGAOEAcIA4QB4gDIA4QB4gDxAHiAHGAOEAcIA4QB0AcIA4QB4gDxAHiAHGAOEAcIA6AOEAcIA4QB4gDxAHiAHGAOEAcIA6AOEAcIA4QB4gDxAHiAHGAOEAcAHGAOEAcIA4QB4gDxAHiAHGAOADigIR/AUwPFl13Fj2fAAAAAElFTkSuQmCC">
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIlVmZmEuIiwgInNob3J0X25hbWUiOiAiVWZmYS4iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwgImJhY2tncm91bmRfY29sb3IiOiAiIzBjMGQxMCIsICJ0aGVtZV9jb2xvciI6ICIjMGMwZDEwIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBTFFBQUFDMENBSUFBQUN5cjVGbEFBQUc1MGxFUVZSNDJ1M2RlV3hUZFFEQThiZlhZMTNYclZ1N2RodVVVWEFjbStFUWhDRURRUkF3d0VRUUJFOGtCa0c1RXNNbC9nRVlBd1FFSlFxU2dGRWdDb29TUWhhSUErU1lqa05sSE9NYWpMRUJ1emZXc2JFZXNQb0hpWGFGUHRqYXRRVytuK3lmdnI2Ky92YnlYZC92UFVwZWlDWWlTZ0R1UjJRWGdEaEFIQ0FPRUFlSUE4UUI0Z0J4Z0RoQUhBQnhnRGhBSENBT0VBZUlBOFFCNGdCeGdEZ0E0Z0J4Z0RoQUhDQU9FQWVJQThRQjRnQnhBTVFCNGdCeGdEaEFIQ0FPRUFlSUE4UUI0Z0J4QU1RQjRnQnhnRGdRRVBJQXZ2ZU9qUXM2SjVwOHVNRkZLN1pzM1pIWnZOZjI3NU84ZnVWMEx3ZFFiYW5yTTN3T254emdzTktTY3M0WGxwUlZPNTFPN3pkbHN6c3VYaTRxTHIzUjdDMVUzYWc5ZStGcTNTMXJzN2RRVVZtVG5YUDVjWW9qSk9CM2FncFRLZHNseExyK21CT002ckJRaVplVWxsZm5GNWIrLzFOUVdsUmExZERnOU1sNFl2U1JacE94YlJ0alc1UEIzTVpvYmhPYjBEcEdwVks2cm1PMU9RcXVsalVhUTJGcGJaMzFNZnZrQ0FuQzIzaEZheldIZHkzMzlHekdnZXlabjZ6MzUzZ1NUSWFNbnhhN0xobjk3cEp6RjY5eFdBRnpEb0E0UUJ3Z0RoQUhpQVBFQWVJQWNZQTRRQndBY1lBNFFCd2dEaEFIaUFQRUFlSUFjWUE0QU9JQWNZQTRRQndnRGhBSGlBUEVBZUlBY1lBNEFPSUFjWUE0UUJ3Z0RoQUhpT054NW5RU1I2QjJ2U0MxNytWeW1aL0hJNWU1djZQTjdpQ093TERacEhaOXFGTGg1L0dvVk83dmFMVVJSNkRpa1B5N2pOQ0UrWGs4a1JxMTI1SjZxNDA0QXFPaHdTbHg5d0pqVEpTZnh4TWZHKzM2ME82NGJhbTVSUndCSTNGekRFTk1wRkxoMTNzSW1kc1lYUitXbE4xd1Boa3owaUNONDFweHBhZW5aS0tZMkQ3ZW40UHBrbVJ1TkxhaUNrNWxBeWszNzdyRXM5MlMyL2x0SkFxRnZOdlRqZUxJT1Y5SUhJRjBJaWRmNHRuVTNrbCtHMG5mWnp1SHExV3VTMDZmS3lDT1FQcm5WTjZkT3cyZW51MlhrdXkzYzVheGFYMWRIOTVwYURpV2ZaRTRBc2xTVTNmMGVLN0hDdytoaXJTaHZmd3dqQVNUWVhEL2JvMnFQWG5KVWxOSEhBRzJhKy9mRXM5T2ZtdW9vdVhQV1JiTUhDdUtJYTVMZHU4N0xqd3hnamVPOUQxL1ZWWFhlcjcyb0h2dmpSZGJkQUNqWGtvWm1OckZkY25OMnZvZHU0ODhPWEhJZzNaa1ZwdGo4N2I5c3lhbmVWcGgycVRobVVmT25yblFJdWNPWFpMYUxwN3p1dHZDclRzeTY2MTI3emNlb1FsN2U5d0xRd1owdjNzRjVjclZzb3dEMlp1MzdRKzIrMHNHNDkwaFhlY1d1MzVjMkNwTzUybUY4a3JMaENtZlgvZDhVYVI1dWlXYjEzOHhJN0x4bkxlcXVuYlkrSVUzYSt1OTNIam5STk0zS3o2SU4wYTdMUzhxcVpvNmQyMXVYaEdIbFlmOThQaDA1VmFKRlF4NjdaWjFzMzE3ei9OeGFhbWIxMzRVZWMvWjBQS3Z0M3RmaGtHdjNiQnErcjFsQ0lMUUtrNjNZZFVNdlM0eWVQYS9UQm1xQ3VZK3Jsd3RDMWVIUHRPbHZhY1Z3dFdxMFNQNjJHeU8wK2NLdkx5cS9aUTVidVdpU1JQSEQ1TEozUDltZHY1MjdLdHYwNzMvZGVaTkg5TzdSMGVKMzBVZHBqeVlsY05oNWFIN2xZbHJsazV4bXh2ZU42TjFHM2Z2M25lOHFWKzJFTVdRbEI0ZEo3enkvSkFCM2QzT1RlNDZkZmJLeEJsZmVqL2JFTVdRSTd0V1JFYW9wYy9obnhzeDExZDMxMzc4NHhBRVFhbVFyMWsydFgrZjVBZXVXVk5iZnlnckovUG8yWnp6QmZtRnBaNzJza0loYjk4Mk5xbURLYVZIcDM0cFNRYTkxdE1HejF3b25EUnpkWTNYQnhSQkVHTDBrWC9zWFBiQTFmcTlQTCtpc29ZNG1uSmFKWmQ5UEhQc202OE9lUGlYMkIyM1M4dXJ5eXNzOVZhNzNYRmJGRU5DbFlvSVRaaEJyOVhySW1UaWcrZGJldzZlbVAvWkpvbnZEelIxd3BHNWMra0RWMHRObTE5WlJSeE5OM0pvcndXenh1bWlOQzArRjdiYVYyOUkvMzdyUGgvKzY3d29obVNsTDQvU2hrdXNjOE5TbXpweVhwQWNWb0o5UXVvbU42L29sL1NzY0xXcVUyTHJlNmVOUHVGME92Y2VPdm5oL0hXSERwL3g5WmFGT0dOMDEyU3p4RHEvcG1jZDlQWDdQaW1mSFA4eHhtZ25qaDgwYWxoS2pONW41MzVXbXlQalFQYUdIekphN21LRExrcXovYnNGY2NiNzcvT1NzdW94azVaSVhCY21qcVo4N29saVNzOU9nL3QzVGVuWk1kSGN6RzhBVlZ2cWpoN1AzZi9uNlQwSFQvaHFlaUVoc1YzOCtwWFQ0bVBkcit3VmxWUzlQM3ZOcGZ6aTRObTlqM1ljcnZUUkVaMDdtRHEwaTI5dmpvODFhQTA2clM0NlFoMm1WQ29WU29YY0tUanQ5dHQydThOeTgxWjVaVTE1aGFYd2V2bkZ5OFVYOHE1ZHlpLzI4ekZlRTY1NjU3VkJRd2QyTjV1TWdpQmN1VmFXY2VERXBwOS81L0k1SGhuOGp6Y1FCNGdEeEFIaUFIR0FPRUFjSUE0UUI0Z0RJQTRRQjRnRHhBSGlBSEdBT0VBY0lBNFFCMEFjSUE0UUI0Z0R4QUhpQUhHQU9FQWNJQTZBT0VBY0lBNFFCNGdEeEFIaUFIR0FPRUFjSUE2QU9FQWNJQTRRQjRnRHhBSGlBSEdBT0VBY0FIR0FPRUFjSUE0UUI0Z0R4QUhpQUhHQU9BRGlnSVIvQVV3UEZsMTNGajJmQUFBQUFFbEZUa1N1UW1DQyIsICJzaXplcyI6ICIxODB4MTgwIiwgInR5cGUiOiAiaW1hZ2UvcG5nIn1dfQ==">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<title>Uffa.</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ===== TOKENS ===== */
+:root{--bg:#0c0d10;--s1:#15171b;--s2:#1d1f24;--ln:rgba(255,255,255,.08);--tx:#eceae4;--mu:#878a92;--ac:#e4d2a6;--ia:#b9c6de;--sh:0 8px 30px rgba(0,0,0,.28);--glass:rgba(255,255,255,.05);--k:1;--fs:16px;
+--serif:'Instrument Serif',Georgia,serif;--sans:-apple-system,'SF Pro Text',system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);font-size:var(--fs)}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--sans);overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+:focus-visible{outline:1px solid var(--ia);outline-offset:3px}
+*::-webkit-scrollbar{display:none}*{scrollbar-width:none}
+#app{position:relative;height:var(--vh,100%);overflow:hidden}
+/* ===== SCREENS ===== */
+.screen{position:absolute;inset:0;overflow-y:auto;padding:0 1.4rem 3rem;background:var(--bg);opacity:0;transform:translateY(14px);transition:filter calc(.6s*var(--k)),opacity calc(.45s*var(--k)),transform calc(.5s*var(--k)) cubic-bezier(.2,.7,.2,1)}
+.screen.on{opacity:1;transform:none;filter:none}
+html[data-m=cin] .screen{filter:blur(8px)}
+html[data-m=cin] .screen.on{filter:none}
+.bar{position:sticky;top:0;height:3.4rem;display:flex;align-items:center;background:var(--bg);z-index:2}
+.bk{width:2.4rem;height:2.4rem;display:grid;place-items:center;margin-left:-.6rem;color:var(--mu)}
+h1{font:400 2.5rem/1.05 var(--serif);letter-spacing:-.01em;margin:.3rem 0 1.5rem}
+.mu{color:var(--mu)}.sm{font-size:.85rem}
+/* ===== CARDS ===== */
+.card{display:block;width:100%;box-sizing:border-box;background:var(--s1);border:.5px solid var(--ln);border-radius:1.3rem;padding:1.1rem 1.2rem;box-shadow:var(--sh);transition:transform calc(.2s*var(--k))}
+html[data-card=glass] .card{background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3)}
+html[data-card=editorial] .card{background:transparent;box-shadow:none;border-radius:0;border-width:0 0 .5px 0;padding-left:.1rem;padding-right:.1rem}
+.tap:active{transform:scale(.978)}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;font:1.3rem var(--serif)}
+.tag{font:.72rem var(--sans);color:var(--mu);border:.5px solid var(--ln);border-radius:1rem;padding:.22rem .65rem}
+/* ===== HOME ===== */
+.top{display:flex;justify-content:space-between;align-items:center;height:3.6rem}
+.logo{font:1.55rem var(--serif)}
+.ic{display:flex;gap:.6rem}
+.cb{width:2.4rem;height:2.4rem;border-radius:50%;border:.5px solid var(--ln);background:var(--s1);display:grid;place-items:center;color:var(--mu)}
+.ini{font:1.1rem var(--serif);color:var(--tx);text-align:center}
+.hi{font:italic 1.2rem var(--serif);color:var(--mu);margin:.7rem 0 0}
+.hero{height:9.5rem;display:flex;align-items:center;justify-content:space-between;font:2.2rem var(--serif);margin-top:1.1rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:.8rem}
+.sq{height:6.8rem;display:flex;align-items:flex-end;font:1.4rem var(--serif)}
+.gift{margin-top:1.6rem;display:inline-flex;align-items:center;gap:.65rem;border:.5px solid var(--ln);border-radius:2rem;padding:.8rem 1.15rem;color:var(--ac);font-size:.92rem;opacity:0;transition:opacity calc(1.2s*var(--k))}
+.gift.on{opacity:1}
+.dot{width:.42rem;height:.42rem;border-radius:50%;background:var(--ac);animation:br calc(3.2s*var(--k)) ease-in-out infinite}
+.it{opacity:0;transform:translateY(10px);animation:in calc(.9s*var(--k)) cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i)*.1s*var(--k))}
+@keyframes in{to{opacity:1;transform:none}}
+@keyframes br{50%{transform:scale(1.25);opacity:.55}}
+/* ===== TI PENSO / QUI ===== */
+.center{min-height:calc(100% - 7rem);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;text-align:center}
+.orb{position:relative;width:12rem;height:12rem;border-radius:50%;display:grid;place-items:center;border:.5px solid var(--ln);background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--ac) 16%,transparent),var(--s1) 70%);box-shadow:var(--sh);font:2rem var(--serif);text-align:center;transition:transform calc(.3s*var(--k))}
+.orb:active{transform:scale(.96)}
+.orb.q{width:9rem;height:9rem;animation:br calc(7s*var(--k)) ease-in-out infinite}
+.ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--ac);opacity:.6;pointer-events:none;animation:rg calc(1.8s*var(--k)) ease-out forwards}
+@keyframes rg{to{transform:scale(2.2);opacity:0}}
+html[data-m=min] .inf,html[data-m=min] .dot,html[data-m=min] .orb.q{animation:none!important}
+@media(prefers-reduced-motion:reduce){.inf,.dot,.orb.q{animation:none!important}}
+/* ===== RICORDI ===== */
+.tl{position:relative;padding-left:1.6rem}
+.tl:before{content:'';position:absolute;left:.3rem;top:.4rem;bottom:.4rem;width:.5px;background:var(--ln)}
+.m{position:relative;margin-bottom:1.9rem}
+.m:before{content:'';position:absolute;left:-1.52rem;top:.5rem;width:.45rem;height:.45rem;border-radius:50%;background:var(--mu)}
+.m:first-child:before{background:var(--ac)}
+.m b{display:block;font:400 1.4rem var(--serif);margin:.15rem 0 .3rem}
+/* ===== SETTINGS ===== */
+.set{margin-bottom:1.5rem}
+.set label{display:block;font-size:.85rem;color:var(--mu);margin-bottom:.55rem}
+.seg{display:flex;gap:.2rem;padding:.2rem;background:var(--s2);border-radius:.9rem}
+.seg button{flex:1;text-align:center;font-size:.85rem;color:var(--mu);padding:.6rem 0;border-radius:.7rem;transition:all calc(.25s*var(--k))}
+.seg button.on{background:var(--s1);color:var(--tx);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.av{width:5rem;height:5rem;border-radius:50%;border:.5px solid var(--ln);background:var(--s1);display:grid;place-items:center;font:2rem var(--serif)}
+.slim{height:4.4rem;display:flex;align-items:center;justify-content:space-between;font:1.55rem var(--serif);margin-top:.8rem;padding-top:0;padding-bottom:0}
+.cta{text-align:center;color:var(--ia);border-color:var(--ia);margin-top:1rem}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem}
+.sw{position:relative;background:var(--b);color:var(--t);border:.5px solid var(--ln);border-radius:1rem;padding:1.6rem .4rem .65rem;font-size:.72rem;text-align:center;transition:all calc(.25s*var(--k))}
+.sw:before{content:'';position:absolute;top:.65rem;left:50%;width:.9rem;height:.9rem;margin-left:-.45rem;border-radius:50%;background:var(--a)}
+.sw.on{outline:1.5px solid var(--ia);outline-offset:2px}
+.sw input{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.fp{display:flex;justify-content:space-between;align-items:center;width:100%;box-sizing:border-box;padding:.75rem 1rem;border:.5px solid var(--ln);border-radius:.9rem;margin-bottom:.5rem;color:var(--mu)}
+.fp b{font-weight:400;font-size:1.4rem;color:var(--tx)}
+.fp small{font-size:.8rem}
+.fp.on{border-color:var(--ia);color:var(--tx)}
+.screen.chat{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.msgs{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;padding:.4rem 0 .8rem}
+.b{max-width:86%;opacity:0;transform:translateY(8px);animation:in calc(.5s*var(--k)) ease both}
+.b.u{align-self:flex-end;background:var(--s2);padding:.65rem .95rem;border-radius:1.2rem 1.2rem .3rem 1.2rem;font-size:.95rem;line-height:1.4;-webkit-user-select:text;user-select:text}
+.b.a{font:1.2rem/1.35 var(--serif);-webkit-user-select:text;user-select:text}
+.typ{display:flex;gap:.3rem;padding:.5rem 0}
+.typ i{width:.35rem;height:.35rem;border-radius:50%;background:var(--mu);animation:br calc(1.2s*var(--k)) ease-in-out infinite}
+.typ i:nth-child(2){animation-delay:.2s}.typ i:nth-child(3){animation-delay:.4s}
+.chips{flex-shrink:0;display:flex;gap:.5rem;overflow-x:auto;padding:.3rem 0 .6rem}
+.chip{flex-shrink:0;border:.5px solid var(--ln);border-radius:2rem;padding:.55rem .9rem;font-size:.82rem;color:var(--mu);white-space:nowrap}
+.dock{flex-shrink:0;display:flex;gap:.6rem;align-items:center;padding:.2rem 0 1.1rem}
+.dock input{flex:1;min-width:0;font:inherit;font-size:max(16px,1rem);color:var(--tx);background:var(--s1);border:.5px solid var(--ln);border-radius:2rem;padding:.8rem 1.1rem;outline:none;-webkit-user-select:text;user-select:text}
+.dock input:focus{border-color:var(--ia)}
+.snd{width:2.7rem;height:2.7rem;flex-shrink:0;border-radius:50%;border:.5px solid var(--ia);color:var(--ia);display:grid;place-items:center}
+.hello{font:400 2.7rem/1.05 var(--serif);letter-spacing:-.01em;margin:.4rem 0 1.4rem}
+.big{position:relative;height:13.5rem;overflow:hidden;display:flex;align-items:flex-end;padding:1.4rem}
+.big .t{font:2.6rem var(--serif)}
+.big .th{position:absolute;left:1.4rem;top:1.3rem;color:var(--ac)}
+.big .rg{position:absolute;right:-2rem;top:-2rem;width:12rem;height:12rem}
+.big .rg svg{width:100%;height:100%}
+.parl{display:flex;justify-content:space-between;align-items:baseline;width:100%;box-sizing:border-box;padding:1.5rem .1rem;margin-top:.9rem;border-top:.5px solid var(--ln);border-bottom:.5px solid var(--ln)}
+.parl .t{font:1.8rem var(--serif)}
+.parl .s{font:italic 1.1rem var(--serif);color:var(--mu)}
+.mini{display:flex;justify-content:space-between;margin-top:1.5rem;padding:0 .1rem}
+.mini button{font:1.15rem var(--serif);color:var(--mu)}
+.orb{transition:transform calc(.3s*var(--k)),box-shadow calc(1s*var(--k))}
+.orb.sent{box-shadow:0 0 3.5rem color-mix(in srgb,var(--ac) 32%,transparent),var(--sh)}
+.sig{position:absolute;left:50%;top:50%;width:.55rem;height:.55rem;margin:-.275rem;border-radius:50%;background:var(--ac);box-shadow:0 0 1rem var(--ac);pointer-events:none;animation:sg calc(2.4s*var(--k)) cubic-bezier(.3,.6,.3,1) forwards}
+@keyframes sg{0%{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translateY(-17rem) scale(.2)}}
+#sub{transition:opacity .5s}
+.b.u{background:none;padding:0 .85rem 0 0;border-radius:0;border-right:1px solid var(--ia);text-align:right;font-size:1rem}
+.tl:before{width:1px;background:linear-gradient(transparent,var(--ln) 12%,var(--ln) 88%,transparent)}
+.m:before{background:var(--ac);box-shadow:0 0 0 .3rem color-mix(in srgb,var(--ac) 16%,transparent)}
+.m b{font-size:1.8rem;line-height:1.1;margin:.35rem 0 .5rem}
+.md{display:flex;gap:.6rem;align-items:center}
+.rv{opacity:0;transform:translateY(14px);transition:opacity calc(.9s*var(--k)),transform calc(.9s*var(--k)) cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.pv{position:sticky;top:3.4rem;z-index:1;background:var(--bg);padding:.2rem 0 .8rem;margin-bottom:.6rem}
+.pvc{padding:.9rem 1.1rem}
+.pvh{font:1.6rem var(--serif);margin-bottom:.6rem}
+.pvr{display:flex;justify-content:space-between;align-items:center;font:1.3rem var(--serif);padding:.45rem 0;border-top:.5px solid var(--ln)}
+.pvr svg{width:2rem;height:2rem}
+.pvs{display:flex;justify-content:space-between;align-items:baseline;font:1.05rem var(--serif);padding-top:.5rem;border-top:.5px solid var(--ln)}
+.pvs i{color:var(--mu)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:7;background:var(--ov,none)}
+.gw{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem}
+.gw .card{padding:.9rem .3rem;text-align:center;font-size:.85rem}
+.hd{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1rem}
+.pad{height:11rem;display:grid;place-items:center;touch-action:none;background:linear-gradient(to top,color-mix(in srgb,var(--ac) calc(var(--p,0)*45%),transparent),transparent)}
+.pad.on{border-color:var(--ia)}
+.ar{position:relative;height:16rem;border:.5px solid var(--ln);border-radius:1.3rem;overflow:hidden;margin-bottom:.8rem}
+.dt{position:absolute;left:42%;top:40%;width:3.2rem;height:3.2rem;border-radius:50%;background:var(--ac);opacity:.9;transition:left calc(.25s*var(--k)),top calc(.25s*var(--k))}
+.cv{display:block;width:100%;height:52vh;touch-action:none;border:.5px solid var(--ln);border-radius:1.3rem;background:var(--s1);margin-bottom:.8rem}
+.duo{display:flex;justify-content:center;margin-top:2rem}
+.duo i{width:6rem;height:6rem;border-radius:50%;border:.5px solid var(--ac);margin:0 -.9rem;animation:br calc(6s*var(--k)) ease-in-out infinite}
+.duo i+i{animation-delay:-3s;border-color:var(--ia)}
+html[data-m=min] .duo i{animation:none}
+.chip.on{color:var(--tx);border-color:var(--ia)}
+.chips.w{flex-wrap:wrap;overflow:visible}
+.fld{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:max(16px,1rem);color:var(--tx);background:var(--s1);border:.5px solid var(--ln);border-radius:1rem;padding:.8rem 1rem;outline:none;resize:none;-webkit-user-select:text;user-select:text}
+.mini{flex-wrap:wrap;gap:.6rem 1rem}.mini button{font-size:1.02rem}
+.orb .lb{font-size:1.6rem;line-height:1.1;padding:0 1.6rem}
+button.m{display:block;width:100%;padding:0}
+.rdg{margin-bottom:2rem}
+.rdg b{display:block;font:400 1.5rem/1.15 var(--serif);margin:.35rem 0 .3rem}
+.imm{margin:0 -1.4rem 1.6rem;padding:0 1.4rem 1rem;background:radial-gradient(120% 80% at 50% -25%,color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%)}
+.imm h1{font-size:3rem;margin:.6rem 0 .3rem}
+.rt{font:1.2rem/1.55 var(--serif);margin:0 0 1.8rem}
+.fr{border:.5px solid var(--ln);border-radius:1.3rem;aspect-ratio:4/3;display:grid;place-items:center;color:var(--mu);font-size:.85rem;background:var(--s1);margin-bottom:1.4rem;overflow:hidden}
+.fr svg{width:80%;height:80%}
+.bq{font:italic 1.3rem/1.4 var(--serif);border-left:1px solid var(--ia);padding-left:1rem;margin:0 0 1.6rem}
+.pn{display:flex;justify-content:space-between;gap:1rem;margin-top:2.2rem;color:var(--mu);font-size:.9rem}
+html.q .it{animation-duration:calc(.45s*var(--k));animation-delay:calc(var(--i)*.04s*var(--k))}
+#intro .cl i{display:block;font-size:1.3rem;line-height:1.95;opacity:0;transition:opacity 1s}
+#intro p.show .cl i{opacity:1}
+#intro .sk{position:absolute;left:0;right:0;bottom:calc(1.6rem + env(safe-area-inset-bottom,0px));text-align:center;font:.78rem var(--sans);color:var(--mu);opacity:.6}
+button.m,.rt,.bq,.imm h1{overflow-wrap:break-word}
+.mr{display:flex;gap:1rem;align-items:flex-start}
+.mb{flex:1;min-width:0}
+.th2{flex-shrink:0;width:3.8rem;height:3.8rem;border-radius:.9rem;border:.5px solid var(--ln);background:var(--s1);display:grid;place-items:center;font-size:.62rem;color:var(--mu)}
+button.m.in:active{transform:scale(.985);transition-duration:.15s}
+.rdg{text-align:left;border-color:color-mix(in srgb,var(--ac) 28%,var(--ln))}
+.pn button{min-height:2.75rem;max-width:48%;overflow-wrap:break-word}
+.pn button:last-child{text-align:right}
+.fld[type=search]{-webkit-appearance:none;appearance:none}
+#rlw.s>.tl,#rlw.s>p{animation:fd calc(.3s*var(--k)) ease both}
+@keyframes fd{from{opacity:0;transform:translateY(4px)}}
+.tag{white-space:nowrap;flex-shrink:0}
+.screen{overscroll-behavior:contain}
+/* ===== RELAX ===== */
+.need{border-color:color-mix(in srgb,var(--ac) 45%,var(--ln))}
+.calm{position:relative;height:62vh;border-radius:1.6rem;overflow:hidden;background:var(--s1);border:.5px solid var(--ln)}
+.calm i{position:absolute;width:62%;aspect-ratio:1;border-radius:50%;filter:blur(42px);opacity:.5;animation:dr calc(22s*var(--k)) ease-in-out infinite alternate}
+.calm i:nth-child(1){background:var(--ac);left:-12%;top:8%}
+.calm i:nth-child(2){background:var(--ia);right:-16%;top:38%;animation-duration:calc(28s*var(--k));animation-delay:-6s}
+.calm i:nth-child(3){background:color-mix(in srgb,var(--ac) 50%,var(--ia));left:18%;bottom:-22%;animation-duration:calc(34s*var(--k));animation-delay:-12s}
+.calm p{position:absolute;left:0;right:0;bottom:1.6rem;margin:0;text-align:center;font:italic 1.2rem var(--serif);color:var(--tx);opacity:.8}
+@keyframes dr{0%{transform:translate(0,0) scale(1)}50%{transform:translate(12%,-8%) scale(1.15)}100%{transform:translate(-8%,10%) scale(.9)}}
+html[data-m=min] .calm i{animation:none}
+@media(prefers-reduced-motion:reduce){.calm i{animation:none}}
+.gone-txt{white-space:pre-wrap;overflow-wrap:break-word;font:1.2rem/1.5 var(--serif);padding:.8rem 1rem;transition:opacity calc(2.4s*var(--k)) ease,filter calc(2.4s*var(--k)) ease,transform calc(2.4s*var(--k)) ease}
+.gone-txt.go{opacity:0;filter:blur(10px);transform:translateY(-2.5rem)}
+.b.a .chips{margin-top:.7rem;padding:0}
+a.chip{text-decoration:none;color:var(--tx);border-color:var(--ia)}
+#sheet .card{max-height:82vh;overflow-y:auto}
+/* ===== OVERLAYS ===== */
+#intro{position:fixed;inset:0;z-index:9;background:var(--bg);display:grid;place-items:center;transition:opacity 1.1s}
+#intro.gone{opacity:0;pointer-events:none}
+#intro p{margin:0;padding:0 2rem;font:italic 2.1rem/1.2 var(--serif);text-align:center;opacity:0;transform:scale(.985);transition:opacity 1.2s ease,transform 7s linear}
+#intro p.show{opacity:1;transform:scale(1)}
+#intro p.big{font-size:2.9rem;letter-spacing:-.01em}
+#sheet{position:fixed;inset:0;z-index:8;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;opacity:0;transition:opacity calc(.3s*var(--k))}
+#sheet.on{opacity:1}
+#sheet .card{border-radius:1.6rem 1.6rem 0 0;padding:1.6rem 1.4rem calc(1.6rem + env(safe-area-inset-bottom,0px));background:var(--s1);transform:translateY(30px);transition:transform calc(.4s*var(--k)) cubic-bezier(.2,.7,.2,1)}
+#sheet.on .card{transform:none}
+#toast{position:fixed;left:50%;bottom:calc(1.6rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);background:var(--s2);border:.5px solid var(--ln);padding:.7rem 1.1rem;border-radius:2rem;font-size:.88rem;opacity:0;pointer-events:none;transition:all calc(.3s*var(--k));z-index:10}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+/* ============ DATA — testi e dati fittizi, modificali qui ============ */
+let NAME='Francesca';try{const n=localStorage.getItem('uffa_name');if(n)NAME=n}catch(e){}
+const DATA={
+  /* dati DEMO. Ogni ricordo: d (data), t (titolo), x (descrizione) + facoltativi luogo, tag:[..], foto, song, draw, msg, extra:[[etichetta,valore]] */
+  ricordi:[
+    {d:'Inizio',t:'La prima sera',tag:['demo','sera'],x:'Testo di prova: sostituiscilo con un ricordo vero.'},
+    {d:'Estate',t:'Un viaggio',tag:['demo','viaggio'],luogo:'Luogo demo',x:'Testo di prova: sostituiscilo con un ricordo vero.',song:'Canzone demo',msg:'Messaggio demo: qui comparirà un vostro messaggio.'},
+    {d:'Autunno',t:'Una domenica qualunque',tag:['demo','domenica'],x:'Testo di prova: sostituiscilo con un ricordo vero.',draw:1},
+    {d:'Oggi',t:'Adesso',tag:['demo','oggi'],luogo:'Luogo demo',x:'Testo di prova: sostituiscilo con un ricordo vero.',foto:1,extra:[['Gioco','Gioco demo']]}
+  ],
+    insieme:[['Disegna insieme','disegna'],['Ascolta insieme','ascolta'],['Giochiamo','giochi'],['Stiamo qui','qui']]
+};
+const DEMO=DATA.ricordi;
+
+/* ============ STATE — impostazioni ============ */
+const D0={atm:'luna',pal:'midnight',accent:'#e4d2a6',font:'editorial',k:'1',card:'soft',fs:'16'};
+const S={...D0};
+try{Object.assign(S,JSON.parse(localStorage.getItem('uffa')||'{}'))}catch(e){}
+/* Palette: bg, s1/s2 = superfici, tx/mu = testo principale/secondario, ac = accent, ia = elementi interattivi */
+const PAL={
+  midnight:{n:'Midnight',bg:'#0c0d10',s1:'#15171b',s2:'#1d1f24',tx:'#eceae4',mu:'#878a92',ac:'#e4d2a6',ia:'#b9c6de'},
+  moon:{n:'Moon',bg:'#eceff3',s1:'#fbfcfd',s2:'#dfe4ea',tx:'#14171c',mu:'#6a7280',ac:'#56658a',ia:'#34446a',l:1},
+  warm:{n:'Warm',bg:'#14100d',s1:'#1e1813',s2:'#29201a',tx:'#f0e6da',mu:'#9b8c7c',ac:'#d9a877',ia:'#ecc59b'},
+  forest:{n:'Forest',bg:'#0d1210',s1:'#151c19',s2:'#1c2622',tx:'#e6ebe4',mu:'#80908a',ac:'#a3c1a0',ia:'#c2dcbe'},
+  cream:{n:'Cream',bg:'#f4efe6',s1:'#fbf8f2',s2:'#ebe4d6',tx:'#221d17',mu:'#857b6c',ac:'#8a6a3a',ia:'#6b4f25',l:1}
+};
+const SYS="-apple-system,'SF Pro Text',system-ui,sans-serif",RND="ui-rounded,'SF Pro Rounded','Avenir Next',system-ui,sans-serif",MON="ui-monospace,'SF Mono',Menlo,monospace";
+const FONTS={
+  editorial:{n:'Editorial',d:"'Instrument Serif',Georgia,serif",u:SYS},
+  modern:{n:'Modern',d:"-apple-system,'SF Pro Display',system-ui,sans-serif",u:SYS},
+  soft:{n:'Soft',d:RND,u:RND},
+  mono:{n:'Mono',d:MON,u:MON}
+};
+const ATM={
+  luna:"radial-gradient(120% 50% at 50% -5%,rgba(170,190,240,.16),transparent 65%),rgba(120,140,190,.05)",
+  mattina:"radial-gradient(120% 50% at 90% -5%,rgba(255,220,160,.20),transparent 65%),rgba(255,235,200,.05)",
+  notte:"rgba(0,0,8,.32)",
+  warm:"radial-gradient(120% 45% at 50% 105%,rgba(255,160,80,.18),transparent 65%),rgba(255,170,90,.05)"
+};
+const OPT={
+  atm:['Atmosfera',[['luna','Luna'],['mattina','Mattina'],['notte','Notte'],['warm','Warm']]],
+  k:['Animazioni',[['0.01','Minime'],['1','Normali'],['1.6','Cinematiche']]],
+  card:['Card',[['soft','Soft'],['glass','Glass'],['editorial','Editorial']]],
+  fs:['Testo',[['15','Piccolo'],['16','Normale'],['18','Grande']]]
+};
+if(!(S.pal in PAL)&&S.pal!=='custom')S.pal=D0.pal;
+if(!(S.font in FONTS))S.font=D0.font;
+if(!/^#[0-9a-f]{6}$/i.test(S.accent))S.accent=D0.accent;
+Object.keys(OPT).forEach(k=>{if(!OPT[k][1].some(o=>o[0]===S[k]))S[k]=D0[k]});
+const $=s=>document.querySelector(s),K=()=>+S.k;
+function palette(){
+  if(S.pal!=='custom')return PAL[S.pal];
+  const m=(p,b)=>`color-mix(in srgb,${S.accent} ${p}%,${b})`;
+  return{bg:m(5,'#0b0c0f'),s1:m(8,'#14161a'),s2:m(12,'#1c1e22'),tx:'#eceae4',mu:'#8b8e95',ac:m(70,'#fff'),ia:m(80,'#fff'),tc:'#0b0c0f'};
+}
+function apply(){
+  const d=document.documentElement,st=d.style,P=palette(),L=P.l;
+  ['bg','s1','s2','tx','mu','ac','ia'].forEach(k=>st.setProperty('--'+k,P[k]));
+  st.setProperty('--ln',L?'rgba(0,0,0,.09)':'rgba(255,255,255,.08)');
+  st.setProperty('--sh',L?'0 8px 30px rgba(0,0,0,.07)':'0 8px 30px rgba(0,0,0,.28)');
+  st.setProperty('--glass',L?'rgba(255,255,255,.6)':'rgba(255,255,255,.05)');
+  st.setProperty('--serif',FONTS[S.font].d);st.setProperty('--sans',FONTS[S.font].u);
+  st.setProperty('--ov',ATM[S.atm]);st.setProperty('--k',S.k);st.setProperty('--fs',S.fs+'px');
+  d.dataset.card=S.card;d.dataset.m=K()<.1?'min':K()>1.2?'cin':'';
+  $('meta[name=theme-color]').content=P.tc||P.bg;
+}
+const save=()=>{try{localStorage.setItem('uffa',JSON.stringify(S))}catch(e){}};
+const hap=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+
+/* ============ MUSICA — punto d'ingresso per il futuro collegamento Spotify ============ */
+const MUSIC={
+  connected:false,   // diventerà true dopo il collegamento reale
+  actions:[['Per te','Una scelta pensata per te.'],['Relax','Per rallentare un po’.'],['Per voi','Qualcosa da ascoltare insieme.'],['Casuale','Lascia scegliere al caso.']],
+  connect(){/* TODO: OAuth Spotify reale */}
+};
+
+/* ============ ASSISTANT — Parlami. Oggi risposte locali, nel telefono.
+   Per collegare una vera AI si sostituisce solo Assistant.reply(): riceve la cronologia e restituisce {text, acts}. ============ */
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const QUICK=['Ho bisogno di staccare','Consigliami una canzone','Giochiamo','Voglio parlare','Voglio stare da sola'];
+const other=()=>(AUTH.couple&&AUTH.couple.partner&&AUTH.couple.partner.name)||(NAME==='Francesca'?'Nunzio':'Francesca');
+const greet=()=>{const h=new Date().getHours();return h<5?'È tardi.':h<12?'Buongiorno.':h<18?'Ciao.':'Buonasera.'};
+/* acts: [etichetta, schermata] oppure [etichetta, '!azione'] */
+const MOCK={
+  'Ho bisogno di staccare':{text:'Allora fermiamoci un momento. Niente da risolvere adesso. Un minuto di respiro, o solo guardare qualcosa di calmo?',acts:[['Respira','respira'],['Guarda','guarda']]},
+  'Consigliami una canzone':{text:'Quando la musica sarà collegata potrò consigliartela davvero. Intanto scegli il tipo di momento.',acts:[['Musica','musica']]},
+  'Giochiamo':{text:'Volentieri. Ce ne sono dieci, da trenta secondi a qualche minuto.',acts:[['Giochi','giochi']]},
+  'Voglio parlare':{text:'Ci sono. Comincia da dove vuoi, anche a metà.'},
+  'Voglio stare da sola':{text:'Va bene. Nessuna fretta e nessuna risposta da dare. Resto qui, in silenzio, finché vuoi.'}
+};
+/* momenti seri: vengono prima di tutto. Numeri verificati a settembre 2026 */
+const CRISIS=/\b(suicid|uccidermi|ammazzarmi|togliermi la vita|farla finita|non voglio piu vivere|non voglio vivere|voglio morire|vorrei morire|vorrei essere mort|farmi del male|tagliarmi|autolesion|meglio se non ci fossi|meglio senza di me|non ha piu senso vivere|sparire per sempre)/;
+const HELP=()=>[['Chiama Telefono Amico','tel:0223272327'],['Chiama il 112','tel:112'],['Ho bisogno di te','!need']];
+const INT=[
+  {k:CRISIS,r:()=>({crisis:true,text:`Mi fermo un attimo, perché quello che hai scritto è importante. Non devi portarlo tutto tu. Se senti di poterti fare del male adesso, chiama il 112. Se vuoi parlare con qualcuno, Telefono Amico risponde a qualsiasi ora al 02 2327 2327, e su WhatsApp al 324 011 7252 dalle 18 alle 21. E puoi far sapere a ${other()} che ti serve, senza spiegare niente.`,acts:HELP()})},
+  {k:/\b(chi sei|sei vera|sei vero|sei un.?ai|sei un robot|sei un bot|intelligenza artificiale)/,r:()=>({text:'Sono la parte di Uffa. che ascolta. Per ora rispondo in modo semplice: le risposte sono preparate qui nel telefono, non c’è un’intelligenza artificiale collegata.'})},
+  {k:/\b(mi manchi|mi manca|lontan|distanza|vorrei che fossi qui)/,r:()=>({text:'Succede. Non serve che sia un problema: a volte basta farglielo sapere.',acts:[['Ti penso','tipenso']].concat(letAct())})},
+  {k:/\b(triste|giu|piango|piangere|sto male|ansia|ansios|preoccupat|stress|pesante|non ce la faccio)/,r:()=>({text:`Mi dispiace. Non devi spiegare tutto, anche due parole vanno bene. Se ti pesa, puoi scriverlo e lasciarlo andare, oppure far sapere a ${other()} che ti serve.`,acts:[['Scrivi e lascia andare','lascia'],['Ho bisogno di te','!need']].concat(letAct())})},
+  {k:/\b(arrabbiat|nervos|incazzat|furios|odio|che palle|uffa)/,r:()=>({text:'Capito. Buttalo fuori, qui o altrove. Poi lo lasciamo andare.',acts:[['Scrivi e lascia andare','lascia']]})},
+  {k:/\b(stanc|sonno|esaust|distrutt|stremat|dormire)/,r:()=>({text:'Allora rallentiamo. Un minuto di respiro, niente di più.',acts:[['Respira','respira'],['Guarda','guarda']]})},
+  {k:/\b(annoi|noia|che faccio|non so cosa fare)/,r:()=>({text:'Proviamo qualcosa di stupido. Alcuni giochi durano trenta secondi.',acts:[['Giochi','giochi']]})},
+  {k:/\b(musica|canzon|ascoltare)/,r:()=>({text:'La musica non è ancora collegata, quindi non posso sceglierla io. Da Musica puoi decidere il tipo di momento.',acts:[['Musica','musica']]})},
+  {k:/\b(ricord|ti ricordi)/,r:()=>({text:'I ricordi sono in una stanza tutta loro.',acts:[['Ricordi','ricordi']]})},
+  {k:/\b(felice|contenta|contento|bella giornata|che bello|sto bene|benissimo)/,r:()=>({text:'Mi fa piacere. Raccontami la parte migliore.'})},
+  {k:/\bcome stai\b/,r:()=>({text:'Sono qui, e mi basta. Tu come stai?'})},
+  {k:/\b(grazie)/,r:()=>({text:'Quando vuoi.'})},
+  {k:/^(ciao|ehi|hey|buongiorno|buonasera|salve)\b/,r:()=>({text:greet()+' Come stai, davvero?'})}
+];
+const GEN=['Ti ascolto.','Vai avanti, non ho fretta.','Capisco. Che cosa senti, in questo momento?','Dimmi di più, se ti va.','E tu come stai, in tutto questo?'];
+let gi=0;
+const Assistant={
+  /* history: [{role:'user'|'assistant',text}] → Promise<{text, acts?}> */
+  async reply(history){
+    const raw=history[history.length-1].text;
+    await wait(700+Math.min(1400,raw.length*12));
+    if(MOCK[raw])return MOCK[raw];
+    const t=norm(raw);
+    for(const x of INT)if(x.k.test(t))return x.r();
+    if(history.slice(-8).some(m=>m.crisis))return {crisis:true,text:`Sono qui. Hai sentito qualcuno? Telefono Amico risponde a qualsiasi ora al 02 2327 2327, e ${other()} è a un segnale di distanza.`,acts:HELP()};
+    if(raw.length>140)return {text:'Grazie per avermelo detto. Tra tutto questo, cosa pesa di più?'};
+    if(/\?\s*$/.test(raw))return {text:'Non ho una risposta vera, per ora. Tu cosa ne pensi?'};
+    return {text:GEN[gi++%GEN.length]};
+  }
+};
+/* la conversazione resta solo su questo telefono */
+const CHAT=(()=>{try{return JSON.parse(localStorage.getItem('uffa_chat')||'[]')}catch(e){return[]}})();
+const saveChat=()=>{try{localStorage.setItem('uffa_chat',JSON.stringify(CHAT.slice(-80)))}catch(e){}};
+let busy=false;
+const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const actHTML=a=>(a&&a.length)?`<div class="chips w">${a.map(([l,to])=>to.startsWith('tel:')?`<a class="chip" href="${to}">${esc(l)}</a>`:to[0]==='!'?`<button class="chip" data-act="${to.slice(1)}">${esc(l)}</button>`:`<button class="chip" data-go="${to}">${esc(l)}</button>`).join('')}</div>`:'';
+const msgHTML=m=>`<div class="b ${m.role==='user'?'u':'a'}">${esc(m.text)}${m.role==='user'?'':actHTML(m.acts)}</div>`;
+function push(h){const m=$('.msgs');if(!m)return null;m.insertAdjacentHTML('beforeend',h);m.scrollTo({top:m.scrollHeight,behavior:K()<.1?'auto':'smooth'});return m.lastElementChild}
+async function send(text){
+  text=(text||'').trim();if(!text||busy)return;busy=true;
+  const ci=$('#ci');if(ci)ci.value='';
+  const u={role:'user',text};CHAT.push(u);saveChat();push(msgHTML(u));hap(6);
+  const t=push('<div class="b a typ"><i class="inf"></i><i class="inf"></i><i class="inf"></i></div>');
+  let r;try{r=await Assistant.reply(CHAT.slice())}catch(e){r={text:'Non riesco a rispondere adesso. Riprova tra un attimo.'}}
+  if(typeof r==='string')r={text:r};
+  if(t)t.remove();
+  const m={role:'assistant',text:r.text,acts:r.acts||[],crisis:!!r.crisis};CHAT.push(m);saveChat();push(msgHTML(m));busy=false;
+}
+
+/* ============ GIOCHI — ogni gioco è una funzione run(el): oggi locale, domani condivisibile tra due telefoni ============ */
+const gq=t=>`<p style="font:1.7rem/1.2 var(--serif);margin:0 0 1.2rem">${t}</p>`;
+function ch(el,t,o,cb){el.innerHTML=gq(t)+o.map((x,i)=>`<button class="card row tap" data-i="${i}">${x}</button>`).join('');el.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{hap(6);cb(o[b.dataset.i],+b.dataset.i)})}
+function msg(el,t,l,cb,sub){el.innerHTML=gq(t)+(sub?`<p class="mu" style="margin:-.6rem 0 1.4rem">${sub}</p>`:'')+`<button class="card cta tap" id="gx">${l}</button>`;el.querySelector('#gx').onclick=cb}
+const QD=[['Colazione ideale',['Dolce','Salata','Solo caffè']],['Sabato sera',['Fuori','Un film','Dormire']],['Vacanza',['Mare','Montagna','Città']],['Superpotere',['Volare','Teletrasporto','Leggere la mente']],['Silenzio o musica?',['Silenzio','Musica','Dipende']]];
+const W=['Luna','Mare','Caffè','Treno','Pioggia','Chitarra','Libro','Divano','Bici','Neve','Pizza','Specchio'];
+const DL=[['Vivere in una casa senza porte','Vivere in una casa senza finestre'],['Parlare solo cantando','Camminare solo all’indietro'],['Un cavallo grande come un cane','Un cane grande come un cavallo'],['Sapere sempre l’ora','Sapere sempre che tempo farà'],['Mai più caffè','Mai più dolci'],['Un giorno di silenzio totale','Un giorno in cui dici tutto ciò che pensi']];
+const DK=['Qual è una cosa piccola che ti fa stare meglio?','Cosa ti ha fatto ridere di più questa settimana?','Se potessi essere ovunque adesso, dove saresti?','Quale canzone ti riporta a un momento preciso?','Che giorno ripeteresti?','Cosa ti manca di quando eri piccola o piccolo?','Cosa vorresti saper fare domani?'];
+function duo(el){let i=0,sc=0;const nx=()=>{if(i>=QD.length)return msg(el,`${sc} su ${QD.length}.`,'Ancora',()=>duo(el),sc>3?'Vi conoscete bene.':'C’è ancora qualcosa da scoprire.');
+  const[q,o]=QD[i];ch(el,q+': tu?',o,a=>msg(el,'Passa il telefono all’altro.','Pronto',()=>ch(el,q+': cosa ha risposto?',o,g=>{if(g===a)sc++;i++;msg(el,g===a?'Esatto.':'Era: '+a+'.','Avanti',nx)})))};nx()}
+function hot(el){const d=(a,b)=>Math.abs(a%3-b%3)+Math.abs((a/3|0)-(b/3|0));
+  const grid=(cb,t)=>{el.innerHTML=gq(t)+`<div class="gw">${W.map((w,i)=>`<button class="card tap" data-i="${i}">${w}</button>`).join('')}</div>`;el.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{hap(6);cb(+b.dataset.i,b)})};
+  grid(s=>msg(el,'Passa il telefono all’altro.','Pronto',()=>{let n=3;grid((g,b)=>{if(g===s)return msg(el,'Trovata.','Ancora',()=>hot(el),W[s]);const k=d(g,s);b.style.borderColor=k<2?'var(--ac)':k<3?'var(--ia)':'var(--ln)';b.textContent=k<2?'Caldo':k<3?'Tiepido':'Freddo';if(--n<=0)msg(el,'Era '+W[s]+'.','Ancora',()=>hot(el))},'Trova la parola. Tre tentativi.')}),'Uno sceglie una parola in segreto.')}
+function hold(el){el.innerHTML=gq('Tenete premuto insieme.')+'<div class="hd"><div class="card pad" id="a">Tu</div><div class="card pad" id="b">L’altro</div></div><p class="mu" id="hs">Servono due dita. Se una lascia, si riparte.</p>';
+  const P={a:0,b:0},A=el.querySelector('#a'),B=el.querySelector('#b'),hs=el.querySelector('#hs');let t=0;
+  [['a',A],['b',B]].forEach(([k,n])=>{n.onpointerdown=e=>{n.setPointerCapture(e.pointerId);P[k]=1;n.classList.add('on');hap(8)};n.onpointerup=n.onpointercancel=()=>{P[k]=0;n.classList.remove('on')}});
+  const iv=setInterval(()=>{if(!el.isConnected||t>=4)return clearInterval(iv);t=P.a&&P.b?t+.1:0;A.style.setProperty('--p',t/4);B.style.setProperty('--p',t/4);
+    hs.textContent=t>=4?'Fatto. Insieme.':t?Math.ceil(4-t)+'…':'Servono due dita. Se una lascia, si riparte.';if(t>=4)hap([20,60,20])},100)}
+function tap(el){el.innerHTML=gq('Prendi i cerchi.')+'<div class="ar" id="ar"><button class="dt" id="dt" aria-label="Cerchio"></button></div><p class="mu" id="ts">Tocca il cerchio per iniziare. Hai 20 secondi.</p>';
+  const ar=el.querySelector('#ar'),d=el.querySelector('#dt'),ts=el.querySelector('#ts');let n=0,T=20,on=0,iv;const mv=()=>{d.style.left=Math.random()*80+'%';d.style.top=Math.random()*75+'%'};
+  d.onclick=()=>{if(!on){on=1;iv=setInterval(()=>{ts.textContent=n+' presi · '+--T+'s';if(T<=0){clearInterval(iv);d.style.display='none';ts.textContent='Ne hai presi '+n+'. Tocca l’area per rigiocare.';on=2}},1000);mv();return}n++;hap(5);mv()};
+  ar.onclick=e=>{if(on===2)tap(el)}}
+function eyes(el){const p=()=>msg(el,'Chiudi gli occhi e senti passare dieci secondi.','Inizia',()=>{const t0=Date.now();msg(el,'Ora.','Stop',()=>{const s=(Date.now()-t0)/1000;msg(el,s.toFixed(2)+' secondi.','Riprova',p,Math.abs(s-10)<.5?'Quasi perfetto.':s<10?'Troppo presto.':'Troppo tardi.')})},'Tocca Stop quando credi siano passati.');p()}
+function dil(el){let i=Math.random()*DL.length|0;const r=()=>{const[a,b]=DL[i%DL.length];ch(el,'Cosa preferisci?',[a,b],()=>msg(el,'Scelto.','Un altro dilemma',()=>{i++;r()},'Ora tocca all’altro. Poi confrontate.'))};r()}
+function deck(el){let i=Math.random()*DK.length|0;const r=()=>msg(el,DK[i],'Un’altra',()=>{i=(i+1+(Math.random()*(DK.length-1)|0))%DK.length;r()},'Rispondete a turno, senza fretta.');r()}
+/* --- nuovi giochi (8-10): stessi helper ch() e msg() degli altri --- */
+const VF=['Potrei passare una giornata intera senza uscire di casa.','Sceglierei sempre un viaggio improvvisato.','Preferisco una serata tranquilla a una festa.','Cambierei programma all’ultimo momento.','Preferisco decidere subito piuttosto che pensarci a lungo.'];
+const DM=['Dimmi una cosa che ti fa stare bene ultimamente.','Dimmi una cosa che vorresti fare insieme.','Dimmi una cosa che non ti ho mai chiesto.','Dimmi una cosa che ti ricorda me.','Dimmi una cosa che vorresti imparare.'];
+const sm=t=>`<br><span class="mu" style="font-size:1rem">${t}</span>`;
+function vf(el){let i=0,sc=0;const nx=()=>{if(i>=VF.length)return msg(el,`${sc} su ${VF.length}.`,'Ancora',()=>vf(el),sc>=VF.length-1?'Vi leggete bene.':'C’è ancora qualcosa da scoprire.');
+  const s=VF[i];ch(el,`“${s}”${sm('Per te è vera?')}`,['Vero','Falso'],a=>msg(el,'Passa il telefono all’altro.','Pronto',()=>ch(el,`“${s}”${sm('Per l’altro è vera o falsa?')}`,['Vero','Falso'],g=>{if(g===a)sc++;i++;msg(el,g===a?'Esatto.':`No: per l’altro era ${a==='Vero'?'vera':'falsa'}.`,'Avanti',nx)})))};nx()}
+const MC=[
+  {t:'Guardatevi negli occhi per 15 secondi senza ridere.',run:(el,end)=>{let T=15;el.innerHTML=gq('Guardatevi.')+`<p class="mu" id="ts" style="font:3rem var(--serif);margin:0">${T}</p>`;const ts=el.querySelector('#ts');
+    const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);ts.textContent=--T;if(T<=0){clearInterval(iv);hap([15,50,15]);ch(el,'Com’è andata?',['Non abbiamo riso','Abbiamo riso'],(v,i)=>end(i?'Ridere fa parte del gioco.':'Sguardo tenuto. Bravi.'))}},1000)}},
+  {t:'Tenete entrambi un dito sullo schermo per 10 secondi senza staccarlo.',run:(el,end)=>{el.innerHTML=gq('Un dito a testa. Dieci secondi.')+'<div class="hd"><div class="card pad" id="a">Tu</div><div class="card pad" id="b">L’altro</div></div><p class="mu" id="hs">Appoggiate le dita per iniziare.</p>';
+    const P={a:0,b:0},A=el.querySelector('#a'),B=el.querySelector('#b'),hs=el.querySelector('#hs');let t=0,on=0,fin=0;
+    [['a',A],['b',B]].forEach(([k,n])=>{n.onpointerdown=e=>{n.setPointerCapture(e.pointerId);P[k]=1;n.classList.add('on');hap(8)};n.onpointerup=n.onpointercancel=()=>{P[k]=0;n.classList.remove('on')}});
+    const iv=setInterval(()=>{if(fin||!el.isConnected)return clearInterval(iv);
+      if(P.a&&P.b){on=1;t+=.1}else if(on){fin=1;clearInterval(iv);return end('Uno dei due ha lasciato.')}
+      A.style.setProperty('--p',t/10);B.style.setProperty('--p',t/10);hs.textContent=on?Math.max(0,Math.ceil(10-t))+'…':'Appoggiate le dita per iniziare.';
+      if(t>=10){fin=1;clearInterval(iv);hap([20,60,20]);end('Dieci secondi. Insieme.')}},100)}},
+  {t:'Contate mentalmente fino a 10 e toccate lo schermo insieme.',run:(el,end)=>{el.innerHTML=gq('Contate fino a 10, ognuno in silenzio.')+'<div class="hd"><div class="card pad" id="a">Tu</div><div class="card pad" id="b">L’altro</div></div><p class="mu">Quando ci siete, toccate insieme.</p>';
+    const t0=Date.now(),T={};const hit=k=>{if(T[k])return;T[k]=Date.now()-t0||1;el.querySelector('#'+k).classList.add('on');hap(8);
+      if(T.a&&T.b){const d=Math.abs(T.a-T.b)/1000;setTimeout(()=>end((d<.5?'Quasi insieme.':d<1.5?'Vicini.':'Ognuno ha contato a modo suo.')+sm((T.a/1000).toFixed(1)+'s e '+(T.b/1000).toFixed(1)+'s')),500)}};
+    el.querySelector('#a').onpointerdown=()=>hit('a');el.querySelector('#b').onpointerdown=()=>hit('b')}}
+];
+function mute(el){let k=Math.random()*MC.length|0;const end=t=>ch(el,t,['Riprova','Un’altra sfida'],(v,i)=>{if(i)k=(k+1)%MC.length;show()});
+  const show=()=>msg(el,MC[k].t,'Inizia',()=>MC[k].run(el,end),'Senza parlare.');show()}
+function dimmi(el){const o=[...DM].sort(()=>Math.random()-.5);let i=0;const nx=()=>{if(i>=o.length)return msg(el,'Basta così.','Ancora',()=>dimmi(el),'Per oggi può bastare.');
+  msg(el,o[i++],'Fatto',nx,'A voce, senza fretta. Non viene registrato nulla.')};nx()}
+const GAMES=[
+  {t:'Chi conosce meglio l’altro?',d:'Rispondi su di te, poi indovina l’altro.',m:'5 min',run:duo},
+  {t:'Indovina cosa sto pensando',d:'Uno nasconde una parola, l’altro cerca: caldo o freddo.',m:'2 min',run:hot},
+  {t:'Facciamolo insieme',d:'Due dita, un solo respiro.',m:'30 sec',run:hold},
+  {t:'Sfida veloce',d:'Quanti cerchi prendi in venti secondi?',m:'20 sec',run:tap},
+  {t:'A occhi chiusi',d:'Senti passare dieci secondi.',m:'1 min',run:eyes},
+  {t:'Cosa preferisci?',d:'Dilemmi assurdi, nessuna risposta giusta.',m:'2 min',run:dil},
+  {t:'A bruciapelo',d:'Una domanda alla volta, per conoscervi.',m:'3 min',run:deck},
+  {t:'Vero o falso',d:'Una frase su uno dei due: l’altro decide se è vera.',m:'2 min',run:vf},
+  {t:'Non parlare',d:'Una piccola sfida da fare in silenzio.',m:'1 min',run:mute},
+  {t:'Dimmi una cosa',d:'Un invito alla volta, a voce, senza fretta.',m:'5 min',run:dimmi}
+];
+let GI=0,SI=0;
+/* ============ TI PENSO — segnali ============ */
+const SIG=[['💭','Ti penso'],['🤍','Sono qui'],['🫶','Un abbraccio'],['👀','Guardami un secondo'],['','Ho bisogno di te']];
+/* ============ INSIEME ============ */
+function initDraw(el){const c=el.querySelector('#cv'),x=c.getContext('2d'),r0=c.getBoundingClientRect(),dp=devicePixelRatio||1;
+  c.width=r0.width*dp;c.height=r0.height*dp;x.scale(dp,dp);x.lineCap='round';x.lineWidth=3;let col='--tx',dr=0,l;
+  const pt=e=>{const r=c.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  c.onpointerdown=e=>{dr=1;l=pt(e);c.setPointerCapture(e.pointerId);x.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue(col).trim();x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(l[0]+.1,l[1]);x.stroke()};
+  c.onpointermove=e=>{if(!dr)return;const p=pt(e);x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(p[0],p[1]);x.stroke();l=p};
+  c.onpointerup=c.onpointercancel=()=>dr=0;
+  el.querySelectorAll('[data-col]').forEach(b=>b.onclick=()=>{col=b.dataset.col;el.querySelectorAll('[data-col]').forEach(z=>z.classList.toggle('on',z===b))});
+  el.querySelector('#clr').onclick=()=>x.clearRect(0,0,c.width,c.height)}
+function initQui(el){const t=el.querySelector('#qt');let f=0;const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);t.textContent=(f=!f)?'Espira.':'Inspira.'},3500*Math.max(K(),.6));t.textContent='Inspira.'}
+/* ============ RELAX ============ */
+const RLX=()=>[['Respira','Un minuto, solo il respiro.','respira'],['Ascolta qualcosa','Vai alla musica.','musica'],['Guarda','Niente da fare, solo guardare.','guarda'],['Scrivi e lascia andare','Scrivi, poi lascialo andare. Non resta niente.','lascia'],['Aprimi quando…','Lettere da aprire nel momento giusto.','lettere']];
+function initRespira(el){const t=el.querySelector('#rt'),c=el.querySelector('#rc'),per=(K()>1.2?1.6:1)*3500;let f=0,n=0;t.textContent='Inspira.';
+  const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);f=!f;t.textContent=f?'Espira.':'Inspira.';if(!f&&++n===8)c.textContent='Un minuto. Puoi restare quanto vuoi.'},per)}
+function letGo(){const ta=$('#lt'),tx=((ta&&ta.value)||'').trim();if(!tx)return toast('Scrivi qualcosa, prima.');
+  const w=$('#lw'),ls=$('#ls');w.innerHTML=`<div class="gone-txt">${esc(tx)}</div>`;hap([8,60,8]);
+  const g=w.firstChild;requestAnimationFrame(()=>requestAnimationFrame(()=>g.classList.add('go')));
+  setTimeout(()=>{if(!w.isConnected)return;w.innerHTML='<textarea class="fld" id="lt" rows="7" placeholder="Scrivi quello che pesa."></textarea>';if(ls)ls.textContent='Andato. Non è rimasto niente.'},2600*K()+300)}
+function needSheet(){
+  if(!paired())return sheet(`<p style="font:1.8rem var(--serif);margin:0 0 .5rem">Ho bisogno di te.</p><p class="mu" style="margin:0;line-height:1.5">Quando sarete collegati in Tu → Account, da qui partirà un segnale per ${esc(other())}. Per ora non parte.</p>`);
+  sheet(`<p style="font:1.8rem var(--serif);margin:0 0 .5rem">Ho bisogno di te.</p><p class="mu" style="margin:0 0 1rem">Arriverà a ${esc(other())}. Nessuna spiegazione necessaria.</p><button class="card cta tap" data-act="need-send">Mandalo</button>`)}
+const HOOK={respira:initRespira,ricordi:reveal,disegna:initDraw,qui:initQui,gioco:el=>GAMES[GI].run(el.querySelector('#gm'))};
+/* ============ SORPRESA — solo preparazione locale, nessuna consegna ============ */
+const SP={type:'Messaggio',when:'Subito',tone:'Discreto'};
+const HINT={Foto:'La foto si potrà aggiungere quando la consegna sarà attiva.',Canzone:'La canzone si sceglierà con Spotify collegato.',Disegno:'Il disegno si potrà allegare in seguito.','Mini gioco':'Il gioco si sceglierà più avanti.',Ricordo:'Il ricordo si sceglierà dalla raccolta.'};
+let SPL=[];try{SPL=JSON.parse(localStorage.getItem('uffa_s')||'[]')}catch(e){}
+const saveS=()=>{try{localStorage.setItem('uffa_s',JSON.stringify(SPL))}catch(e){}};
+const cs=(k,o)=>o.map(v=>`<button class="chip ${SP[k]===v?'on':''}" data-act="sp" data-k="${k}" data-v="${v}">${v}</button>`).join('');
+const whH=()=>SP.when==='Data e ora'?'<input class="fld" id="wd" type="datetime-local" style="margin-top:.6rem">':SP.when==='Subito'?'':'<select class="fld" id="wp" style="margin-top:.6rem"><option>Nei prossimi 3 giorni</option><option>Questa settimana</option><option>Questo mese</option></select>';
+const splLocal=()=>SPL.length?'<p class="mu sm" style="margin:2rem 0 .8rem">Preparate</p>'+SPL.map((z,i)=>`<div class="card" style="margin-bottom:.7rem"><div class="md" style="justify-content:space-between"><span style="font:1.2rem var(--serif)">${z.type}</span><span class="tag">Non consegnata</span></div><p class="mu sm" style="margin:.4rem 0">${esc(z.text||'')}</p><p class="mu sm" style="margin:0">${esc(z.w)} · ${z.tone}</p><button class="mu sm" data-act="spdel" data-i="${i}" style="margin-top:.6rem">Elimina</button></div>`).join(''):'';
+function prepLocal(){const tx=($('#st').value||'').trim();if(!tx&&/^(Messaggio|Domanda)$/.test(SP.type))return toast('Scrivi qualcosa.');
+  const w=SP.when==='Data e ora'?($('#wd').value?'Il '+$('#wd').value.replace('T',' alle '):''):SP.when==='Subito'?'Subito':$('#wp').value;
+  if(!w)return toast('Scegli data e ora.');SPL.unshift({type:SP.type,text:tx,w,tone:SP.tone});saveS();$('#st').value='';$('#spl').innerHTML=spl();hap([10,40,10]);toast('Preparata. Non è ancora partita.')}
+/* ============ TU ============ */
+const tuS=(t,x)=>`<p style="font:1.7rem var(--serif);margin:0 0 .6rem">${t}</p><p class="mu" style="margin:0;line-height:1.5">${x}</p>`;
+const TU={
+  mio:()=>tuS('Il tuo Uffa.',`${S.pal==='custom'?'Custom':PAL[S.pal].n} · ${OPT.atm[1].find(o=>o[0]===S.atm)[1]} · ${FONTS[S.font].n}. Cambia tutto da Personalizza.`),
+  ricorda:()=>tuS('Cosa ricorda Uffa.','Sul server, visibili solo a voi due: account, nomi, il vostro collegamento, i segnali, le lettere, le risposte alla domanda del giorno, le sorprese, i ricordi e il prossimo incontro. Su questo telefono: le impostazioni e la conversazione di Parlami, che non esce mai dal telefono e puoi cancellare quando vuoi.'),
+  privacy:()=>tuS('Privacy','Nessuna posizione tracciata. Nessun “online” o “ultimo accesso”. Nessun indicatore di digitazione. Quello che scrivi in Parlami resta qui. In futuro potrai proteggere Uffa. con Face ID.'),
+  notifiche:()=>tuS('Notifiche','Non sono ancora attive. Quando lo saranno, arriveranno solo cose che hai scelto: niente online, niente posizione, niente notifiche insistenti.'),
+  account:()=>tuS('Account','Nessun account in questo prototipo. In futuro: accesso con Apple, collegamento dei due telefoni con QR code o codice manuale, recupero dell’account con Apple.')
+};
+const TR=[['info','mio','Il tuo Uffa.'],['go','custom','Personalizza'],['info','ricorda','Cosa ricorda Uffa.'],['info','privacy','Privacy'],['info','notifiche','Notifiche'],['go','spotify','Spotify'],['go','account','Account'],['act','replay','Rivedi l’introduzione']];
+
+/* ============ RICORDI — ricerca, ricordo del giorno, dettaglio ============ */
+let MI=0;
+const norm=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const hay=r=>norm([r.d,r.t,r.x,r.luogo,(r.tag||[]).join(' '),r.song&&'canzone '+r.song,r.msg&&'messaggio '+r.msg,r.foto&&'foto',r.draw&&'disegno'].concat((r.extra||[]).flat()).filter(Boolean).join(' '));
+const rtags=r=>[r.song&&'Canzone',r.draw&&'Disegno',r.msg&&'Messaggio'].concat((r.extra||[]).map(e=>e[0])).filter(Boolean).map(z=>`<span class="tag">${z}</span>`).join('');
+const rlw=(q,fast)=>{const w=norm(q).trim(),L=DATA.ricordi.map((r,i)=>[r,i]).filter(([r])=>!w||hay(r).includes(w));
+  return L.length?`<div class="tl">${L.map(([r,i])=>`<button class="m rv${fast?' in':''}" data-act="mem" data-i="${i}"><div class="mr"><div class="mb"><div class="md"><span class="mu sm">${esc(r.d)}</span>${r.real?'':'<span class="tag">Demo</span>'}</div><b>${esc(r.t)}</b>${r.luogo?`<span class="mu sm" style="display:block;margin-bottom:.4rem">${esc(r.luogo)}</span>`:''}<span class="mu" style="font-size:.92rem;line-height:1.45;display:block">${esc(r.x)}</span>${rtags(r)?`<div class="md" style="margin-top:.6rem;flex-wrap:wrap">${rtags(r)}</div>`:''}</div>${r.foto?'<span class="th2">Foto</span>':''}</div></button>`).join('')}</div>`:'<p class="mu" style="margin-top:2rem;font:italic 1.25rem var(--serif)">Non ho trovato niente qui.</p>'};
+const rdg=()=>{if(!DATA.ricordi.length)return '';const i=Math.floor(Date.now()/864e5)%DATA.ricordi.length,r=DATA.ricordi[i];
+  return `<button class="card rdg tap it" style="--i:3" data-act="mem" data-i="${i}"><span class="mu sm">Ricordo del giorno</span><b>${esc(r.t)}</b><span class="mu sm">${esc(r.d)}${r.luogo?' · '+esc(r.luogo):''}${r.real?'':' · Demo'}</span></button>`};
+
+/* ============ SUPABASE — configurazione minima: solo Publishable Key qui, mai chiavi segrete ============ */
+const SB_URL='https://zniwsotmdonpaiyrbpxm.supabase.co';
+const SB_KEY='sb_publishable_77fJJjvVZ0xBpY30qHSV-Q_eTfm4zHn';
+let sb=null;
+try{if(window.supabase&&SB_URL&&SB_KEY)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}})}catch(e){}
+const AUTH={user:null,profile:null,mode:'login',err:'',busy:false,ready:!sb,couple:null,pairErr:''};
+function authErr(e){const m=(e&&e.message)||'';
+  if(/Invalid login credentials/i.test(m))return 'Email o password non corrette.';
+  if(/User already registered|already registered/i.test(m))return 'Esiste già un account con questa email.';
+  if(/Password should be at least/i.test(m))return 'La password deve avere almeno 6 caratteri.';
+  if(/rate limit/i.test(m))return 'Troppi tentativi. Riprova tra qualche minuto.';
+  if(/invalid email|Unable to validate email/i.test(m))return 'Email non valida.';
+  return m?'Non è stato possibile completare l’operazione.':'Errore di connessione. Riprova.'}
+async function loadProfile(){if(!sb||!AUTH.user)return;try{const{data}=await sb.from('profiles').select('display_name').eq('id',AUTH.user.id).single();AUTH.profile=data||null;applyName()}catch(e){}await loadCouple()}
+/* ---- collegamento della coppia (Fase 3): il client legge soltanto, tutte le scritture passano da funzioni sul server ---- */
+async function loadCouple(){if(!sb||!AUTH.user){AUTH.couple=null;return}
+  try{const{data:mem,error}=await sb.from('couple_members').select('couple_id,user_id');
+    if(error||!mem||!mem.length){AUTH.couple=null;return}
+    const cid=mem[0].couple_id,other=mem.find(m=>m.user_id!==AUTH.user.id);
+    const{data:c}=await sb.from('couples').select('code,code_expires_at').eq('id',cid).maybeSingle();
+    let partner=null;
+    if(other){const{data:pp}=await sb.from('profiles').select('display_name').eq('id',other.user_id).maybeSingle();partner={name:(pp&&pp.display_name)||''}}
+    AUTH.couple={id:cid,code:(c&&c.code)||null,exp:(c&&c.code_expires_at)||null,partner};
+    startSignals();
+  }catch(e){}}
+function pairErr(e){const m=(e&&e.message)||'';
+  if(/invalid_code/.test(m))return 'Codice non valido o scaduto.';
+  if(/couple_full/.test(m))return 'Questo codice è già stato usato.';
+  if(/own_code/.test(m))return 'Questo è il tuo codice: deve inserirlo l’altra persona.';
+  if(/already_paired/.test(m))return 'Sei già collegato.';
+  return 'Non è stato possibile collegarvi. Riprova.'}
+async function pairCall(fn,args){if(!sb||AUTH.busy)return;AUTH.busy=true;AUTH.pairErr='';renderAccountIfOpen();
+  try{const{error}=await sb.rpc(fn,args||{});if(error)AUTH.pairErr=pairErr(error);else{await loadCouple();hap([10,40,10])}}
+  catch(e){AUTH.pairErr='Errore di connessione. Riprova.'}
+  AUTH.busy=false;renderAccountIfOpen()}
+function pairJoin(){const code=($('#pc')?.value||'').trim();if(!code){AUTH.pairErr='Scrivi il codice.';return renderAccountIfOpen()}pairCall('join_couple',{p_code:code})}
+async function pairRefresh(){await loadCouple();renderAccountIfOpen()}
+const pairHTML=()=>{const c=AUTH.couple,err=`<p class="mu sm" style="margin-top:.8rem;min-height:1.2em">${esc(AUTH.pairErr||'')}</p>`;
+  if(c&&c.partner)return `<div class="set" style="margin-top:2rem"><label>Collegamento</label><div class="card"><div style="font:1.4rem var(--serif)">Siete collegati.</div><p class="mu sm" style="margin:.3rem 0 0">${c.partner.name?'Con '+esc(c.partner.name)+'.':'L’altro account non ha ancora un nome.'}</p></div></div>`;
+  if(c){const ok=c.code&&c.exp&&new Date(c.exp)>new Date();
+    return `<div class="set" style="margin-top:2rem"><label>Collegamento</label><div class="card"><span class="mu sm">Il tuo codice</span>
+    <div style="font:2rem var(--serif);letter-spacing:.12em;margin:.3rem 0;-webkit-user-select:text;user-select:text">${ok?esc(c.code):'Scaduto'}</div>
+    <p class="mu sm" style="margin:0">${ok?'Fallo inserire all’altra persona nel suo Uffa. Vale 24 ore.':'Crea un nuovo codice.'}</p></div>
+    <button class="card row tap" style="margin-top:.8rem" data-act="pair-refresh">Controlla<span class="mu">›</span></button>
+    <button class="card row tap" data-act="pair-create">${AUTH.busy?'…':'Nuovo codice'}<span class="mu">›</span></button>${err}</div>`}
+  return `<div class="set" style="margin-top:2rem"><label>Collegamento</label><p class="mu sm" style="margin:0 0 .8rem">Collega il tuo account a quello dell’altra persona. Uno crea il codice, l’altro lo inserisce.</p>
+  <button class="card row tap" data-act="pair-create">${AUTH.busy?'…':'Crea un codice'}<span class="mu">›</span></button>
+  <div style="display:flex;gap:.6rem;align-items:stretch"><input class="fld" id="pc" placeholder="Ho un codice" autocapitalize="characters" autocomplete="off" style="flex:1;min-width:0"><button class="card cta tap" style="margin:0;width:auto;flex-shrink:0;padding:0 1.1rem" data-act="pair-join">Collega</button></div>${err}</div>`};
+function renderAccountIfOpen(){const t=stack[stack.length-1];if(t&&t.n==='account')t.el.innerHTML=V.account()}
+async function authSubmit(){
+  if(!sb||AUTH.busy)return;
+  const email=($('#ae')?.value||'').trim(),pass=$('#ap')?.value||'';
+  if(!email||!pass){AUTH.err='Inserisci email e password.';return renderAccountIfOpen()}
+  AUTH.busy=true;AUTH.err='';renderAccountIfOpen();
+  try{const call=AUTH.mode==='signup'?sb.auth.signUp({email,password:pass}):sb.auth.signInWithPassword({email,password:pass});
+    const{data,error}=await call;
+    if(error)AUTH.err=authErr(error);
+    else{AUTH.user=data.user||data.session?.user||null;await loadProfile();hap([10,40,10])}
+  }catch(e){AUTH.err='Errore di connessione. Riprova.'}
+  AUTH.busy=false;renderAccountIfOpen()}
+async function authLogout(){if(!sb)return;try{await sb.auth.signOut()}catch(e){}AUTH.user=null;AUTH.profile=null;AUTH.couple=null;AUTH.pairErr='';stopSignals();resetShared();renderAccountIfOpen()}
+async function saveName(){if(!sb||!AUTH.user)return;const v=($('#dn')?.value||'').trim().slice(0,40);
+  try{await sb.from('profiles').update({display_name:v}).eq('id',AUTH.user.id);AUTH.profile={...(AUTH.profile||{}),display_name:v};applyName();toast('Salvato.')}catch(e){toast('Non salvato. Riprova.')}}
+/* ---- Fase 4a: saluto con il proprio nome ---- */
+function applyName(){const n=((AUTH.profile&&AUTH.profile.display_name)||'').trim();if(!n||n===NAME)return;NAME=n;
+  try{localStorage.setItem('uffa_name',n)}catch(e){}
+  document.querySelectorAll('.hello').forEach(e=>e.textContent='Ciao, '+n+'.');document.querySelectorAll('.ini').forEach(e=>e.textContent=n[0])}
+/* ---- Fase 4a: Ti penso reale. Nessuna conferma di lettura, nessuno stato online ---- */
+const paired=()=>!!(sb&&AUTH.user&&AUTH.couple&&AUTH.couple.partner);
+const SEEN='uffa_sig_seen';let sigCh=null;
+async function sendSignal(k){
+  if(!paired())return 'Segnale lasciato. Per ora resta su questo telefono.';
+  const who=AUTH.couple.partner.name,ok=who?'Mandato a '+who+'.':'Mandato.';
+  if(Date.now()-(sendSignal.t||0)<2500)return ok;
+  sendSignal.t=Date.now();
+  try{const{error}=await sb.from('signals').insert({couple_id:AUTH.couple.id,sender:AUTH.user.id,kind:k});
+    return error?'Non è partito. Riprova tra poco.':ok}
+  catch(e){return 'Non è partito. Controlla la connessione.'}}
+function stopSignals(){if(sigCh){try{sb.removeChannel(sigCh)}catch(e){}sigCh=null}}
+function startSignals(){if(!paired())return;const cid=AUTH.couple.id;
+  if(!sigCh||sigCh._cid!==cid){stopSignals();
+    try{sigCh=sb.channel('segnali-'+cid).on('postgres_changes',{event:'INSERT',schema:'public',table:'signals',filter:'couple_id=eq.'+cid},p=>{const r=p&&p.new;if(r&&AUTH.user&&r.sender!==AUTH.user.id)showSignals([r])}).subscribe();sigCh._cid=cid}catch(e){sigCh=null}}
+  checkSignals();loadShared()}
+async function checkSignals(){if(!paired())return;let since='1970-01-01T00:00:00Z';try{since=localStorage.getItem(SEEN)||since}catch(e){}
+  try{const{data}=await sb.from('signals').select('kind,sender,created_at').eq('couple_id',AUTH.couple.id).neq('sender',AUTH.user.id).gt('created_at',since).order('created_at',{ascending:false}).limit(20);
+    if(data&&data.length)showSignals(data)}catch(e){}}
+function showSignals(rows){const r=rows[0];
+  try{const prev=localStorage.getItem(SEEN)||'';if(r.created_at<=prev)return;localStorage.setItem(SEEN,r.created_at)}catch(e){}
+  const who=AUTH.couple&&AUTH.couple.partner&&AUTH.couple.partner.name,z=SIG[r.kind]||SIG[0];
+  let hh='';try{hh=' · '+new Date(r.created_at).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}catch(e){}
+  const more=rows.length===2?' · e un altro':rows.length>2?' · e altri '+(rows.length-1):'';
+  const old=$('#sheet');if(old&&old.close)old.close();
+  hap([10,80,10]);
+  sheet(`<p class="mu sm" style="margin:0 0 .6rem">${who?'Da '+esc(who):'Per te'}${hh}${more}</p><p style="font:2.2rem/1.1 var(--serif);margin:0">${esc(z[1])}.</p>`)}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){checkSignals();loadShared()}});
+/* ============ FASE 4b — lettere, incontro, domanda del giorno, sorprese, ricordi condivisi ============ */
+const SH={letters:[],meet:null,answers:[],sur:[],mine:[]};
+const me=()=>AUTH.user&&AUTH.user.id;
+const pad=n=>String(n).padStart(2,'0');
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const dayNum=k=>{const[y,m,d]=k.split('-').map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
+const fmtDay=k=>{if(!k)return '';try{const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})}catch(e){return k}};
+const fmtShort=t=>{try{return new Date(t).toLocaleDateString('it-IT',{day:'numeric',month:'short'})}catch(e){return ''}};
+const safeQ=p=>Promise.resolve(p).then(r=>r||{error:1},()=>({error:1}));
+const letAct=()=>SH.letters.some(l=>l.author!==me())?[['Aprimi quando…','lettere']]:[];
+const OCC=['Quando mi manchi','Quando non riesci a dormire','Quando hai una giornata storta','Quando hai bisogno di ridere','Quando sei felice'];
+let LOC=OCC[0];
+const QS=['Qual è stata la parte migliore della tua giornata?','Cosa ti ha fatto ridere oggi?','Una canzone che hai in testa in questi giorni?','Cosa mangeresti adesso, potendo scegliere qualsiasi cosa?','Una cosa piccola che vorresti fare insieme la prossima volta?','Cosa ti sta pesando un po’, in questo periodo?','Un posto dove vorresti svegliarti domani?','Qual è l’ultima cosa che ti ha sorpreso?','Cosa vorresti che l’altro sapesse di oggi?','Un film o una serie da vedere insieme?','Cosa ti fa sentire a casa?','Un ricordo nostro a cui pensi spesso?','Se avessi un’ora libera adesso, cosa faresti?','Una cosa che hai imparato di recente?','Cosa ti dà energia, ultimamente?','Il tuo piccolo lusso preferito?','Cosa diresti a te di dieci anni fa?','Che tempo fa lì, e che umore ha?','Una tua abitudine che nessuno conosce?','Cosa ti piacerebbe fare questo weekend?','La cosa più bella che hai visto questa settimana?','Un piatto che ti ricorda casa?','Cosa ti fa arrabbiare più del dovuto?','Un sogno piccolo che hai adesso?','Cosa vorresti che facessimo più spesso?','La tua giornata in tre parole.','La prima cosa che faresti se fossimo insieme adesso?','La tua stagione preferita, e perché?','Una cosa che hai fatto bene questa settimana?','Cosa ti aiuta ad addormentarti?'];
+const qOf=k=>QS[((dayNum(k)%QS.length)+QS.length)%QS.length];
+const TONE={Discreto:'C’è una cosa per te.',Misterioso:'Qualcuno ha lasciato qualcosa qui.',Dolce:'Questa è per te.',Giocoso:'Sorpresa.'};
+function resetShared(){SH.letters=[];SH.meet=null;SH.answers=[];SH.sur=[];SH.mine=[];DATA.ricordi=DEMO;homeBits()}
+async function loadShared(quiet){try{await loadShared0(quiet)}catch(e){}}
+async function loadShared0(quiet){if(!paired())return;const c=AUTH.couple.id,u=me();
+  const [L,M,A,S_,R]=await Promise.all([
+    safeQ(sb.from('letters').select('id,author,occasion,body,created_at').eq('couple_id',c).order('created_at',{ascending:false})),
+    safeQ(sb.from('next_meet').select('at').eq('couple_id',c).maybeSingle()),
+    safeQ(sb.from('daily_answers').select('user_id,day,answer').eq('couple_id',c).order('day',{ascending:false}).limit(80)),
+    safeQ(sb.from('surprises').select('id,author,kind,tone,body,when_label,deliver_at').eq('couple_id',c).order('deliver_at',{ascending:false}).limit(60)),
+    safeQ(sb.from('memories').select('id,author,day,title,place,body').eq('couple_id',c).order('day',{ascending:false}))]);
+  if(L.data)SH.letters=L.data;
+  if(!M.error)SH.meet=(M.data&&M.data.at)||null;
+  if(A.data)SH.answers=A.data;
+  if(S_.data){SH.sur=S_.data.filter(x=>x.author!==u);SH.mine=S_.data.filter(x=>x.author===u)}
+  if(R.data)DATA.ricordi=R.data.length?R.data.map(m=>({real:1,id:m.id,author:m.author,d:fmtDay(m.day)||'Senza data',t:m.title,x:m.body||'',luogo:m.place||undefined,tag:[]})):DEMO;
+  homeBits();if(!quiet)refreshShared();checkSurprises()}
+function homeBits(){document.querySelectorAll('#meet').forEach(e=>e.innerHTML=meetHTML());document.querySelectorAll('#dq').forEach(e=>e.innerHTML=dqHTML())}
+function rerender(){const t=stack[stack.length-1];if(!t||!V[t.n])return;t.el.innerHTML=V[t.n]();if(t.n==='ricordi')reveal(t.el)}
+function refreshShared(){const t=stack[stack.length-1];if(!t||!['lettere','domanda','sorprese','ricordi','incontro'].includes(t.n))return;
+  if([...t.el.querySelectorAll('input,textarea')].some(x=>x.value&&x.type!=='date'))return;rerender()}
+function meetHTML(){if(!paired())return '';
+  const d=SH.meet?dayNum(SH.meet)-dayNum(todayKey()):-1;
+  if(d<0)return '<button class="mu sm" style="display:block;margin:-.9rem 0 1.4rem;min-height:2.2rem" data-go="incontro">Quando vi rivedete?</button>';
+  return `<button class="hi" style="display:block;margin:-.9rem 0 1.4rem;color:var(--ac)" data-go="incontro">${d===0?'Oggi vi vedete.':d===1?'Domani vi vedete.':'Tra '+d+' giorni vi vedete.'}</button>`}
+function dqHTML(){if(!paired())return '';const done=SH.answers.some(a=>a.user_id===me()&&a.day===todayKey());
+  return `<button class="parl tap" style="border-top:0;margin-top:0;padding:1.1rem .1rem" data-go="domanda"><span style="font:1.2rem var(--serif)">La domanda di oggi</span><span class="s">${done?'Fatto':'›'}</span></button>`}
+async function saveLetter(){const occ=(($('#lo')||{}).value||'').trim()||LOC,body=(($('#lb')||{}).value||'').trim();if(!body)return toast('Scrivi qualcosa, prima.');
+  const{error}=await safeQ(sb.from('letters').insert({couple_id:AUTH.couple.id,author:me(),occasion:occ.slice(0,80),body:body.slice(0,6000)}));
+  if(error)return toast('Non salvata. Riprova.');hap([10,40,10]);await loadShared(1);back();rerender();toast('Lasciata.')}
+async function saveMeet(){const v=(($('#md')||{}).value||'');if(!v)return toast('Scegli una data.');
+  const{error}=await safeQ(sb.from('next_meet').upsert({couple_id:AUTH.couple.id,at:v,updated_by:me(),updated_at:new Date().toISOString()},{onConflict:'couple_id'}));
+  if(error)return toast('Non salvato. Riprova.');hap([10,40,10]);await loadShared(1);back();toast('Segnato.')}
+async function clearMeet(){await safeQ(sb.from('next_meet').delete().eq('couple_id',AUTH.couple.id));await loadShared(1);back()}
+async function saveAnswer(){const v=(($('#da')||{}).value||'').trim();if(!v)return toast('Scrivi la tua risposta.');
+  const{error}=await safeQ(sb.from('daily_answers').insert({couple_id:AUTH.couple.id,user_id:me(),day:todayKey(),answer:v.slice(0,1000)}));
+  if(error)return toast('Non salvata. Riprova.');hap([10,40,10]);await loadShared(1);rerender()}
+async function saveMemory(){const t=(($('#mt')||{}).value||'').trim();if(!t)return toast('Dagli almeno un titolo.');
+  const row={couple_id:AUTH.couple.id,author:me(),title:t.slice(0,120),day:(($('#mdd')||{}).value||null),place:((($('#ml')||{}).value||'').trim()||null),body:((($('#mx')||{}).value||'').trim()||null)};
+  const{error}=await safeQ(sb.from('memories').insert(row));
+  if(error)return toast('Non salvato. Riprova.');hap([10,40,10]);await loadShared(1);back();rerender();toast('Tenuto.')}
+async function delShared(tab,id,goBack){if(!confirm('Eliminare? Non si può recuperare.'))return;
+  const{error}=await safeQ(sb.from(tab).delete().eq('id',id));if(error)return toast('Non eliminato. Riprova.');
+  await loadShared(1);if(goBack)back();rerender()}
+function surTop(){let h='<button class="card row tap" style="margin-bottom:1.4rem" data-go="lettere">Aprimi quando…<span class="mu">›</span></button>';
+  if(paired()&&SH.sur.length)h+=`<p class="mu sm" style="margin:0 0 .8rem">Arrivate per te</p>${list(SH.sur.slice(0,10),x=>`<button class="card row tap" data-act="sur-open" data-id="${x.id}">${esc(TONE[x.tone]||'Per te.')}<span class="mu sm">${fmtShort(x.deliver_at)}</span></button>`)}<p class="mu sm" style="margin:1.6rem 0 .8rem">Preparane una</p>`;
+  return h}
+function surNote(){return paired()?`<p class="mu sm" style="margin:1rem 0 0">${esc(other())} la troverà aprendo Uffa., dopo il momento scelto. Per ora niente notifiche.</p>`:'<p class="mu sm" style="margin:1rem 0 0">Per ora resta solo su questo telefono: nessuna consegna, nessuna notifica.</p>'}
+function spl(){if(!paired())return splLocal();if(!SH.mine.length)return '';const now=new Date();
+  return '<p class="mu sm" style="margin:2rem 0 .8rem">Preparate da te</p>'+SH.mine.map(z=>`<div class="card" style="margin-bottom:.7rem"><div class="md" style="justify-content:space-between"><span style="font:1.2rem var(--serif)">${esc(z.kind)}</span><span class="tag">${new Date(z.deliver_at)<=now?'Arrivata':'Programmata'}</span></div><p class="mu sm" style="margin:.4rem 0;overflow-wrap:break-word">${esc(z.body||'')}</p><p class="mu sm" style="margin:0">${esc(z.when_label||'')} · ${esc(z.tone)}</p><button class="mu sm" data-act="sur-del" data-id="${z.id}" style="margin-top:.4rem;min-height:2.4rem">Elimina</button></div>`).join('')}
+function prep(){if(paired())return prepServer();prepLocal()}
+async function prepServer(){const tx=(($('#st')||{}).value||'').trim();if(!tx)return toast('Scrivi qualcosa: è quello che troverà.');
+  let at=new Date(),label='Subito';
+  if(SP.when==='Data e ora'){const v=(($('#wd')||{}).value||'');if(!v)return toast('Scegli data e ora.');at=new Date(v);label='Il '+v.replace('T',' alle ')}
+  else if(SP.when!=='Subito'){const w=(($('#wp')||{}).value||'Questa settimana'),days=/3/.test(w)?3:/settimana/i.test(w)?7:30;at=new Date(Date.now()+(.1+.9*Math.random())*days*864e5);label='A caso: '+w.toLowerCase()}
+  const{error}=await safeQ(sb.from('surprises').insert({couple_id:AUTH.couple.id,author:me(),kind:SP.type,tone:SP.tone,body:tx.slice(0,4000),when_label:label,deliver_at:at.toISOString()}));
+  if(error)return toast('Non è partita. Riprova.');
+  const st=$('#st');if(st)st.value='';hap([10,40,10]);toast(SP.when==='Subito'?'Mandata.':'Preparata. Arriverà da sola.');await loadShared(1);const e=$('#spl');if(e)e.innerHTML=spl()}
+const SSEEN='uffa_sur_seen';
+function openSur(x,more){hap([10,80,10]);
+  sheet(`<p class="mu sm" style="margin:0 0 .6rem">${esc(TONE[x.tone]||'Per te.')} · da ${esc(other())}${more===1?' · e un’altra in Sorpresa':more>1?' · e altre '+more+' in Sorpresa':''}</p><p style="font:1.4rem/1.45 var(--serif);white-space:pre-wrap;overflow-wrap:break-word;margin:0">${esc(x.body||'')}</p>${/^(Messaggio|Domanda)$/.test(x.kind)?'':`<p class="mu sm" style="margin-top:.9rem">${esc(x.kind)}: arriverà con una prossima versione di Uffa.</p>`}`)}
+function checkSurprises(){if(!paired()||$('#sheet'))return;let seen=[];try{seen=JSON.parse(localStorage.getItem(SSEEN)||'[]')}catch(e){}
+  const now=new Date(),n=SH.sur.filter(x=>new Date(x.deliver_at)<=now&&!seen.includes(x.id));if(!n.length)return;
+  const x=n[n.length-1];seen.push(x.id);try{localStorage.setItem(SSEEN,JSON.stringify(seen.slice(-300)))}catch(e){}
+  openSur(x,n.length-1)}
+setInterval(()=>{if(paired()&&document.visibilityState==='visible')loadShared(1)},60000);
+if(sb){sb.auth.getSession().then(({data})=>{AUTH.user=data.session?.user||null;AUTH.ready=true;(AUTH.user?loadProfile():Promise.resolve()).then(renderAccountIfOpen)}).catch(()=>{AUTH.ready=true});
+  sb.auth.onAuthStateChange((_e,session)=>{AUTH.user=session?.user||null;(AUTH.user?loadProfile():Promise.resolve()).then(renderAccountIfOpen)})}
+
+/* ============ VIEWS — una funzione per schermata ============ */
+const I={
+  up:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
+  th:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 15a3.5 3.5 0 0 1-.4-7A5 5 0 0 1 17 7.5a3.6 3.6 0 0 1 .5 7.5z"/><circle cx="6" cy="19" r="1"/><circle cx="3.5" cy="21.5" r=".5"/></svg>',
+  bk:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  sl:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg>',
+  rings:'<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="var(--ac)"><circle cx="32" cy="32" r="6" stroke-opacity=".9"/><circle cx="32" cy="32" r="16" stroke-opacity=".5"/><circle cx="32" cy="32" r="28" stroke-opacity=".25"/></svg>'
+};
+const head=t=>`<div class="bar"><button class="bk" data-act="back" aria-label="Indietro">${I.bk}</button></div><h1>${t}</h1>`;
+const list=(items,fn)=>items.map(fn).join('');
+const V={
+  home:()=>`<div class="top it" style="--i:0"><span class="logo">Uffa.</span><span class="ic"><button class="cb" data-go="custom" aria-label="Personalizza">${I.sl}</button><button class="cb ini" data-go="profilo" aria-label="Tu">${NAME[0]}</button></span></div>
+  <h2 class="hello it" style="--i:1;margin-bottom:.2rem">Ciao, ${NAME}.</h2>
+  <p class="hi it" style="--i:1;margin:0 0 1.4rem">Cosa vuoi fare?</p>
+  <div id="meet">${meetHTML()}</div>
+  <button class="card big tap it" style="--i:2" data-go="tipenso"><span class="th">${I.th}</span><span class="rg">${I.rings}</span><span class="t">Ti penso</span></button>
+  <button class="parl tap it" style="--i:3" data-go="parlami"><span class="t">Parlami.</span><span class="s">Sono qui.</span></button>
+  <div id="dq">${dqHTML()}</div>
+  <div class="mini it" style="--i:4">${list([['musica','Musica'],['relax','Relax'],['giochi','Giochi'],['insieme','Insieme'],['ricordi','Ricordi'],['sorprese','Sorpresa']],a=>`<button data-go="${a[0]}">${a[1]}</button>`)}</div>
+  <button id="gift" class="gift" data-go="sorprese"><i class="dot inf"></i><span>Ho qualcosa per te.</span></button>`,
+
+  tipenso:()=>`${head('Ti penso')}<div class="center"><button class="orb" data-act="ping" aria-label="Invia un segnale"><span class="lb">${SIG[SI][1]}</span></button>
+  <p class="mu sm" id="sub">Tocca per mandare un segnale.</p>
+  <div class="chips w" style="justify-content:center">${list(SIG.slice(0,4),(z,i)=>`<button class="chip ${i===SI?'on':''}" data-act="sig" data-i="${i}">${z[0]} ${z[1]}</button>`)}</div></div>
+  <p class="mu sm" style="text-align:center;opacity:.6">${paired()?'Nessun obbligo di risposta.':'Nessun obbligo di risposta. Finché non vi collegate in Tu → Account, il segnale resta su questo telefono.'}</p>`,
+
+  parlami:()=>`<div class="bar"><button class="bk" data-act="back" aria-label="Indietro">${I.bk}</button>${CHAT.length?'<button class="mu sm" style="margin-left:auto;padding:.6rem 0 .6rem .8rem" data-act="chat-clear">Cancella</button>':''}</div>
+  <h1 style="margin-bottom:.3rem">Parlami.</h1><p class="hi" style="margin:0">Sono qui.</p><p class="mu" style="font-size:.78rem;margin:.5rem 0 .9rem;opacity:.75">Quello che scrivi qui rimane qui.</p>
+  <p class="mu" style="font-size:.72rem;margin:-.6rem 0 .9rem;opacity:.55">Versione di anteprima · le risposte sono simulate</p>
+  <div class="msgs">${CHAT.length?CHAT.map(msgHTML).join(''):`<div class="b a">${greet()} Come stai, davvero?</div>`}</div>
+  <div class="chips">${list(QUICK,q=>`<button class="chip" data-act="quick" data-q="${q}">${q}</button>`)}</div>
+  <div class="dock"><input id="ci" placeholder="Scrivi qui" enterkeyhint="send" autocomplete="off"><button class="snd" data-act="send" aria-label="Invia">${I.up}</button></div>`,
+
+  musica:()=>`${head('Musica.')}<p class="hi" style="margin:-.7rem 0 1.4rem">Che cosa vuoi ascoltare?</p>
+  <div class="grid" style="margin-top:0">${list(MUSIC.actions,(a,i)=>`<button class="card sq tap" data-act="mood" data-i="${i}">${a[0]}</button>`)}</div>
+  <button class="card cta tap" data-go="spotify">${MUSIC.connected?'Spotify collegato':'Collega Spotify'}</button>`,
+
+  spotify:()=>`${head('Spotify')}<div class="center" style="align-items:flex-start;text-align:left"><p style="font:1.8rem/1.2 var(--serif);margin:0">Non è ancora collegato.</p>
+  <p class="mu" style="margin:0;line-height:1.5">Spotify potrà essere collegato in seguito. Quando sarà attivo, potrai scegliere cosa ascoltare da qui, senza uscire da Uffa.</p>
+  <p class="mu sm" style="margin:0">Quando sarà collegato, potrai revocare l’accesso in qualsiasi momento e Uffa. non vedrà mai la tua password Spotify. Per ora questa schermata mostra solo come funzionerà.</p></div>`,
+
+  giochi:()=>`${head('Giochi')}${list(GAMES,(g,i)=>`<button class="card tap" style="margin-bottom:.75rem" data-act="play" data-i="${i}"><div class="md" style="justify-content:space-between"><span style="font:1.3rem var(--serif)">${g.t}</span><span class="tag">${g.m}</span></div><p class="mu sm" style="margin:.35rem 0 0">${g.d}</p></button>`)}`,
+  gioco:()=>`${head(GAMES[GI].t)}<div id="gm"></div>`,
+  disegna:()=>`${head('Disegna insieme')}<canvas id="cv" class="cv"></canvas>
+  <div class="chips w"><button class="chip on" data-col="--tx">Chiaro</button><button class="chip" data-col="--ac">Accento</button><button class="chip" data-col="--ia">Luce</button><button class="chip" id="clr">Cancella</button></div>
+  <p class="mu sm" style="margin:.4rem 0 0">Per ora disegni solo tu. In futuro qui disegnerete insieme.</p>`,
+  ascolta:()=>`${head('Ascolta insieme')}<div class="duo"><i class="inf"></i><i class="inf"></i></div>
+  <p style="font:1.7rem/1.25 var(--serif);margin:1.6rem 0 .6rem">Stessa musica, stesso momento.</p>
+  <p class="mu" style="line-height:1.5;margin:0 0 1.4rem">Serve Spotify collegato. Per ora scegliete da dove partire.</p>
+  <div class="chips w">${list(MUSIC.actions,(a,i)=>`<button class="chip" data-act="mood" data-i="${i}">${a[0]}</button>`)}</div>
+  <button class="card cta tap" data-go="musica">Vai a Musica</button>`,
+  insieme:()=>`${head('Insieme')}${list(DATA.insieme,([t,to])=>`<button class="card row tap" ${to?`data-go="${to}"`:'data-act="toast"'}>${t}<span class="${to?'mu':'tag'}">${to?'›':'Presto'}</span></button>`)}`,
+
+  qui:()=>`${head('Stiamo qui')}<div class="center"><div class="orb q inf"></div><p id="qt" style="font:1.7rem var(--serif);margin:0">Sei qui.</p><p class="mu sm" style="margin:0">Nessuno deve fare niente.</p></div>`,
+
+  ricordi:()=>`${head('Ricordi.')}<p class="hi" style="margin:-.8rem 0 .3rem">Le cose che vale la pena tenere.</p><p class="mu sm" style="margin:0 0 1.6rem">${DATA.ricordi===DEMO?'Dati di esempio, non ricordi reali.':'Solo vostri.'}</p>${paired()?'<button class="card cta tap" style="margin:0 0 1.6rem" data-go="nuovoricordo">Aggiungi un ricordo</button>':''}
+  <div id="rdg">${rdg()}</div>
+  <div style="margin-bottom:1.8rem"><input class="fld" id="rq" type="search" placeholder="Cerca nei ricordi" autocomplete="off" enterkeyhint="search"></div>
+  <div id="rlw">${rlw('',0)}</div>`,
+
+  ricordo:()=>{const n=DATA.ricordi.length,r=DATA.ricordi[MI],P=MI>0?DATA.ricordi[MI-1]:0,N=MI<n-1?DATA.ricordi[MI+1]:0;
+  const S_=[r.foto&&'<div class="fr"><span>Foto demo</span></div>',
+    r.x&&`<p class="rt">${esc(r.x)}</p>`,
+    r.msg&&`<p class="bq">${esc(r.msg)}</p>`,
+    r.draw&&'<div class="fr"><svg viewBox="0 0 200 120" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-linecap="round"><path d="M20 80C50 20 80 110 110 60S170 30 180 70"/></svg></div><p class="mu sm" style="margin:-.9rem 0 1.4rem">Disegno demo</p>',
+    r.song&&`<div class="card" style="margin-bottom:1.4rem"><span class="mu sm">Canzone</span><div style="font:1.35rem var(--serif);margin:.3rem 0">${esc(r.song)}</div><span class="mu sm">Con Spotify collegato si potrà ascoltare da qui.</span></div>`,
+    r.luogo&&`<p class="mu" style="margin:0 0 .6rem"><span class="tag">Luogo</span> ${esc(r.luogo)}</p>`,
+    (r.extra||[]).length&&(r.extra||[]).map(e=>`<p class="mu" style="margin:0 0 .6rem"><span class="tag">${esc(e[0])}</span> ${esc(e[1])}</p>`).join(''),
+    r.real&&r.author===me()&&`<button class="mu sm" data-act="mem-del" data-id="${r.id}" style="margin-top:1rem;min-height:2.75rem">Elimina questo ricordo</button>`,
+    (r.tag||[]).length&&`<div class="md" style="flex-wrap:wrap;margin:1rem 0 0">${r.tag.map(z=>`<span class="tag">${esc(z)}</span>`).join('')}</div>`,
+    `<div class="pn">${P?`<button data-act="memn" data-i="${MI-1}">‹ ${esc(P.t)}</button>`:'<span></span>'}${N?`<button data-act="memn" data-i="${MI+1}">${esc(N.t)} ›</button>`:'<span></span>'}</div>`].filter(Boolean);
+  return `<div class="bar"><button class="bk" style="width:2.9rem;height:2.9rem" data-act="back" aria-label="Indietro">${I.bk}</button></div>
+  <div class="imm"><div class="md"><span class="mu sm">${esc(r.d)}</span>${r.real?'':'<span class="tag">Demo</span>'}</div><h1>${esc(r.t)}</h1></div>
+  ${S_.map((h,i)=>`<div class="it" style="--i:${i+1}">${h}</div>`).join('')}`},
+
+  relax:()=>`${head('Relax.')}<p class="hi" style="margin:-.8rem 0 1.6rem">Rallenta un momento.</p>
+  ${list(RLX(),([t,d,to])=>`<button class="card tap" style="margin-bottom:.75rem" data-go="${to}"><div style="font:1.35rem var(--serif)">${t}</div><p class="mu sm" style="margin:.3rem 0 0">${d}</p></button>`)}
+  <button class="card tap need" style="margin-top:1.4rem" data-act="need"><div style="font:1.35rem var(--serif)">Ho bisogno di te</div><p class="mu sm" style="margin:.3rem 0 0">Un segnale a ${esc(other())}, senza dover spiegare.</p></button>`,
+
+  respira:()=>`${head('Respira')}<div class="center"><div class="orb q inf"></div><p id="rt" style="font:1.9rem var(--serif);margin:0">Inspira.</p><p class="mu sm" id="rc" style="margin:0">Segui il cerchio.</p></div>`,
+
+  guarda:()=>`${head('Guarda')}<div class="calm"><i></i><i></i><i></i><p>Niente da fare.</p></div>`,
+
+  lascia:()=>`${head('Lascia andare')}<p class="hi" style="margin:-.8rem 0 1.4rem">Scrivilo. Poi lascialo andare.</p>
+  <div id="lw"><textarea class="fld" id="lt" rows="7" placeholder="Scrivi quello che pesa."></textarea></div>
+  <button class="card cta tap" data-act="letgo">Lascia andare</button>
+  <p class="mu sm" id="ls" style="margin-top:1rem">Non viene salvato niente, da nessuna parte.</p>`,
+
+  lettere:()=>{if(!paired())return `${head('Aprimi quando…')}<p class="hi" style="margin:-.8rem 0 1.6rem">Lettere da aprire nel momento giusto.</p><p class="mu">Collegatevi in Tu → Account per lasciarvi delle lettere.</p>`;
+    const u=me(),who=other(),mine=SH.letters.filter(l=>l.author===u),forMe=SH.letters.filter(l=>l.author!==u);
+    return `${head('Aprimi quando…')}<p class="hi" style="margin:-.8rem 0 1.6rem">Lettere da aprire nel momento giusto.</p>
+    ${forMe.length?list(forMe,l=>`<button class="card row tap" data-act="letter-open" data-id="${l.id}">${esc(l.occasion)}<span class="mu">›</span></button>`):`<p class="mu" style="margin:0 0 1rem">Ancora nessuna lettera da ${esc(who)}.</p>`}
+    <button class="card cta tap" data-go="scrivilettera">Scrivine una per ${esc(who)}</button>
+    ${mine.length?`<p class="mu sm" style="margin:2rem 0 .8rem">Scritte da te</p>${list(mine,l=>`<div class="card" style="margin-bottom:.6rem"><div style="font:1.15rem var(--serif)">${esc(l.occasion)}</div><button class="mu sm" data-act="letter-del" data-id="${l.id}" style="margin-top:.3rem;min-height:2.4rem">Elimina</button></div>`)}`:''}`},
+
+  scrivilettera:()=>`${head('Una lettera')}<p class="hi" style="margin:-.8rem 0 1.2rem">Da aprire…</p>
+  <div class="chips w" style="margin-bottom:.8rem">${list(OCC,o=>`<button class="chip ${LOC===o?'on':''}" data-act="occ" data-v="${o}">${o}</button>`)}</div>
+  <div class="set"><input class="fld" id="lo" placeholder="…oppure scrivi tu il momento" autocomplete="off"></div>
+  <div class="set"><textarea class="fld" id="lb" rows="9" placeholder="Scrivi qui."></textarea></div>
+  <button class="card cta tap" data-act="letter-save">Lasciala qui</button>
+  <p class="mu sm" style="margin-top:1rem">${esc(other())} potrà aprirla quando vuole. Tu non saprai quando la apre.</p>`,
+
+  incontro:()=>`${head('Il prossimo incontro')}${paired()?`<p class="hi" style="margin:-.8rem 0 1.4rem">Quando vi rivedete?</p>
+  <div class="set"><input class="fld" id="md" type="date" value="${SH.meet||''}"></div>
+  <button class="card cta tap" data-act="meet-save">Salva</button>
+  ${SH.meet?'<button class="mu sm" style="margin-top:1rem;min-height:2.75rem" data-act="meet-clear">Togli la data</button>':''}
+  <p class="mu sm" style="margin-top:1rem">Lo vedete tutti e due in Home.</p>`:'<p class="mu">Collegatevi in Tu → Account per segnare il prossimo incontro.</p>'}`,
+
+  domanda:()=>{if(!paired())return `${head('La domanda di oggi')}<p class="mu">Collegatevi in Tu → Account per rispondere insieme.</p>`;
+    const k=todayKey(),u=me(),who=other(),mine=SH.answers.find(a=>a.user_id===u&&a.day===k),hers=SH.answers.find(a=>a.user_id!==u&&a.day===k);
+    const past=[...new Set(SH.answers.map(a=>a.day))].filter(d=>d!==k).slice(0,14);
+    const box=(n,t)=>`<div class="card" style="margin-bottom:.75rem"><span class="mu sm">${n}</span><p style="font:1.2rem/1.45 var(--serif);margin:.3rem 0 0;white-space:pre-wrap;overflow-wrap:break-word">${esc(t)}</p></div>`;
+    return `${head('La domanda di oggi')}<p style="font:1.9rem/1.2 var(--serif);margin:-.6rem 0 1.6rem">${esc(qOf(k))}</p>
+    ${mine?box('Tu',mine.answer)+(hers?box(esc(who),hers.answer):`<p class="mu sm">La risposta di ${esc(who)} comparirà qui.</p>`)
+      :`<textarea class="fld" id="da" rows="4" placeholder="La tua risposta"></textarea><button class="card cta tap" data-act="dq-save">Rispondi</button><p class="mu sm" style="margin-top:.8rem">Vedrai la risposta di ${esc(who)} dopo aver risposto.</p>`}
+    ${past.length?`<p class="mu sm" style="margin:2.2rem 0 .8rem">I giorni scorsi</p>${past.map(d=>`<div class="card" style="margin-bottom:.75rem"><span class="mu sm">${fmtDay(d)}</span><div style="font:1.1rem var(--serif);margin:.3rem 0 .5rem">${esc(qOf(d))}</div>${SH.answers.filter(x=>x.day===d).map(x=>`<p class="mu sm" style="margin:.2rem 0;white-space:pre-wrap;overflow-wrap:break-word"><span style="color:var(--tx)">${x.user_id===u?'Tu':esc(who)}:</span> ${esc(x.answer)}</p>`).join('')}</div>`).join('')}`:''}`},
+
+  nuovoricordo:()=>`${head('Un ricordo')}<div class="set"><input class="fld" id="mt" placeholder="Titolo" autocomplete="off"></div>
+  <div class="set"><label>Quando</label><input class="fld" id="mdd" type="date"></div>
+  <div class="set"><input class="fld" id="ml" placeholder="Dove (facoltativo)" autocomplete="off"></div>
+  <div class="set"><textarea class="fld" id="mx" rows="6" placeholder="Com’è andata."></textarea></div>
+  <button class="card cta tap" data-act="mem-save">Tienilo</button>
+  <p class="mu sm" style="margin-top:1rem">Lo vedrete tutti e due. Il luogo lo scrivi tu: Uffa. non usa la posizione.</p>`,
+
+  sorprese:()=>`${head('Sorpresa.')}<p class="hi" style="margin:-.8rem 0 1.6rem">Preparane una. Solo tu saprai quando arriva.</p>
+  ${surTop()}
+  <div class="set"><label>Cosa</label><div class="chips w">${cs('type',['Messaggio','Foto','Canzone','Disegno','Domanda','Mini gioco','Ricordo'])}</div><p class="mu sm" id="th" style="margin:.3rem 0 0"></p></div>
+  <div class="set"><label>Il tuo testo</label><textarea class="fld" id="st" placeholder="Scrivi qualcosa"></textarea></div>
+  <div class="set"><label>Quando</label><div class="chips w">${cs('when',['Subito','Data e ora','A caso in un periodo'])}</div><div id="wh">${whH()}</div></div>
+  <div class="set"><label>Tono</label><div class="chips w">${cs('tone',['Discreto','Misterioso','Dolce','Giocoso'])}</div></div>
+  <button class="card cta tap" data-act="prep">Prepara</button>
+  ${surNote()}<div id="spl">${spl()}</div>`,
+
+  custom:()=>{const seg=k=>`<div class="set"><label>${OPT[k][0]}</label><div class="seg">${OPT[k][1].map(([v,l])=>`<button data-set="${k}:${v}" class="${S[k]===v?'on':''}">${l}</button>`).join('')}</div></div>`;
+  return `${head('Personalizza')}
+  <div class="pv"><p class="mu" style="font-size:.78rem;margin:0 0 .5rem">Così apparirà Uffa.</p><div class="card pvc"><div class="pvh">Ciao, ${NAME}.</div><div class="pvr"><span>Ti penso</span>${I.rings}</div><div class="pvs"><span>Parlami.</span><i>Sono qui.</i></div></div></div>
+  <div class="set"><label>Palette</label><div class="pg">${list(Object.keys(PAL),k=>{const p=PAL[k];return `<button class="sw ${S.pal===k?'on':''}" data-set="pal:${k}" style="--b:${p.bg};--t:${p.tx};--a:${p.ac}">${p.n}</button>`})}
+  <div class="sw ${S.pal==='custom'?'on':''}" id="swc" style="--b:var(--s2);--t:var(--tx);--a:${S.accent}">Custom<input type="color" id="cc" value="${S.accent}" aria-label="Colore principale"></div></div></div>
+  ${seg('atm')}
+  <div class="set"><label>Font</label>${list(Object.keys(FONTS),k=>`<button class="fp ${S.font===k?'on':''}" data-set="font:${k}" style="font-family:${FONTS[k].d}"><span><b>Uffa.</b><br><small>Questo posto è tuo.</small></span><small style="font-family:${SYS}">${FONTS[k].n}</small></button>`)}</div>
+  ${seg('k')}${seg('card')}${seg('fs')}`},
+
+  account:()=>{
+    if(!sb)return `${head('Account')}<p class="hi" style="margin:-.8rem 0 1.6rem">Non disponibile su questo telefono: Uffa. resta locale.</p>`;
+    if(!AUTH.ready)return `${head('Account')}<p class="mu" style="margin:.6rem 0">Un momento…</p>`;
+    if(AUTH.user)return `${head('Account')}<p class="hi" style="margin:-.8rem 0 1.6rem">${esc(AUTH.user.email||'')}</p>
+    <div class="set"><label>Nome da mostrare</label><input class="fld" id="dn" placeholder="Come vuoi chiamarti qui" value="${esc(AUTH.profile&&AUTH.profile.display_name||'')}"></div>
+    <button class="card cta tap" data-act="save-name">Salva</button>
+    ${pairHTML()}
+    <button class="card row tap" style="margin-top:1.4rem" data-act="logout">Esci<span class="mu">›</span></button>`;
+    return `${head('Account')}<p class="hi" style="margin:-.8rem 0 1rem">${AUTH.mode==='signup'?'Crea il tuo accesso.':'Accedi al tuo Uffa.'}</p>
+    <div class="chips w" style="margin-bottom:1.3rem">
+      <button class="chip ${AUTH.mode==='login'?'on':''}" data-act="auth-mode" data-v="login">Accedi</button>
+      <button class="chip ${AUTH.mode==='signup'?'on':''}" data-act="auth-mode" data-v="signup">Crea account</button>
+    </div>
+    <div class="set"><input class="fld" id="ae" type="email" inputmode="email" autocapitalize="off" autocomplete="email" placeholder="Email"></div>
+    <div class="set"><input class="fld" id="ap" type="password" autocomplete="${AUTH.mode==='signup'?'new-password':'current-password'}" placeholder="Password"></div>
+    <button class="card cta tap" data-act="auth-submit">${AUTH.busy?'…':AUTH.mode==='signup'?'Crea account':'Accedi'}</button>
+    <p class="mu sm" style="margin-top:1rem;min-height:1.2em">${esc(AUTH.err||'')}</p>`;
+  },
+
+  profilo:()=>`${head('Tu.')}<div class="center" style="min-height:0;padding:1rem 0 2.2rem"><div class="orb q inf" style="width:7rem;height:7rem;font:2.6rem var(--serif)">${NAME[0]}</div>
+  <p style="font:1.9rem var(--serif);margin:0">${NAME}</p><p class="hi" style="margin:0">Questo posto è tuo.</p></div>
+  ${list(TR,([k,v,l])=>`<button class="card row tap" ${k==='go'?`data-go="${v}"`:k==='info'?`data-act="info" data-k="${v}"`:`data-act="${v}"`}>${l}<span class="mu">›</span></button>`)}
+  <p class="mu sm" style="text-align:center;margin-top:2.4rem;opacity:.6">Uffa.</p>`
+};
+
+/* ============ ROUTER ============ */
+let stack=[];
+function go(n,first){
+  const el=document.createElement('section');el.className='screen'+(n==='parlami'?' chat':'');el.innerHTML=V[n]();app.appendChild(el);if(n==='parlami'){const m=el.querySelector('.msgs');m.scrollTop=m.scrollHeight}
+  stack.push({n,el});
+  first?el.classList.add('on'):requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('on')));
+  if(n==='home'){setTimeout(()=>el.querySelector('#gift')?.classList.add('on'),3000*K()+400);dynLoop(el)}
+  HOOK[n]&&HOOK[n](el);
+  if(!first)hap(6);
+}
+function back(){
+  if(stack.length<2)return;
+  const {el}=stack.pop();el.classList.remove('on');hap(6);
+  setTimeout(()=>el.remove(),520*K()+60);
+}
+
+/* ============ INTERAZIONI ============ */
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),1800)}
+function sheet(h){const s=document.createElement('div');s.id='sheet';s.innerHTML=`<div class="card">${h}<button class="tag" style="margin-top:1.4rem" data-act="close">Chiudi</button></div>`;
+  s.onclick=e=>{if(e.target===s)close()};document.body.append(s);requestAnimationFrame(()=>s.classList.add('on'));
+  function close(){s.classList.remove('on');setTimeout(()=>s.remove(),350*K()+50)};s.close=close}
+const DYN=[{t:'Ho qualcosa per te.',to:'sorprese'},{t:'Ti va di giocare?',to:'giochi'},{t:'Questa potrebbe piacerti.',to:'musica'},{t:'Un ricordo per oggi.',to:'ricordi'}];
+function dynLoop(el){let i=0;const g=el.querySelector('#gift');
+  const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);g.classList.remove('on');
+    setTimeout(()=>{i=(i+1)%DYN.length;g.dataset.go=DYN[i].to;g.querySelector('span').textContent=DYN[i].t;g.classList.add('on')},1300*K()+300)},7500)}
+function reveal(el){const r=el.querySelectorAll('.rv');
+  if(!window.IntersectionObserver)return r.forEach(x=>x.classList.add('in'));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{root:el,threshold:.2});r.forEach(x=>io.observe(x))}
+function ping(b){
+  const res=sendSignal(SI);hap([10,60,10,140,20]);
+  (K()>1.2?[0,260,520]:[0,260]).forEach(d=>setTimeout(()=>{const r=document.createElement('i');r.className='ring';b.appendChild(r);setTimeout(()=>r.remove(),1900*K()+50)},d*K()));
+  const s=document.createElement('i');s.className='sig';b.appendChild(s);setTimeout(()=>s.remove(),2500*K()+50);
+  b.classList.add('sent');
+  const sub=$('#sub'),q=Math.max(K(),.5);sub.style.opacity=0;
+  setTimeout(()=>{res.then(t=>{sub.textContent=t;sub.style.opacity=1})},1500*q);
+  clearTimeout(ping.t);ping.t=setTimeout(()=>{b.classList.remove('sent');sub.style.opacity=0;setTimeout(()=>{sub.textContent='Tocca per mandare un segnale.';sub.style.opacity=1},500)},4800*q);
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-go],[data-act],[data-set]');if(!t)return;
+  if(t.dataset.go)return go(t.dataset.go);
+  if(t.dataset.set){const[k,v]=t.dataset.set.split(':');S[k]=v;apply();save();hap(8);
+    document.querySelectorAll(`[data-set^="${k}:"]`).forEach(b=>b.classList.toggle('on',b===t));if(k==='pal')$('#swc')?.classList.remove('on');return}
+  const a=t.dataset.act;
+  if(a==='back')back();
+  else if(a==='ping')ping(t);
+  else if(a==='toast')toast('In arrivo.');
+  else if(a==='gift')sheet('<p style="font:1.7rem var(--serif);margin:0 0 .5rem">Ho qualcosa per te.</p><p class="mu" style="margin:0">Qui comparirà quello che ti lascio.</p>');
+  else if(a==='close')$('#sheet').close();
+  else if(a==='replay')intro(1);
+  else if(a==='sig'){SI=+t.dataset.i;$('.lb').textContent=SIG[SI][1];document.querySelectorAll('[data-act=sig]').forEach(b=>b.classList.toggle('on',b===t))}
+  else if(a==='play'){GI=+t.dataset.i;go('gioco')}
+  else if(a==='sp'){const k=t.dataset.k;SP[k]=t.dataset.v;t.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b===t));
+    if(k==='when')$('#wh').innerHTML=whH();if(k==='type')$('#th').textContent=HINT[SP.type]||''}
+  else if(a==='prep')prep();
+  else if(a==='spdel'){SPL.splice(+t.dataset.i,1);saveS();$('#spl').innerHTML=spl()}
+  else if(a==='mem'){MI=+t.dataset.i;go('ricordo')}
+  else if(a==='memn'){MI=+t.dataset.i;const e=stack[stack.length-1].el;e.innerHTML=V.ricordo();e.scrollTop=0;hap(6)}
+  else if(a==='info')sheet(TU[t.dataset.k]());
+  else if(a==='need')needSheet();
+  else if(a==='need-send'){const sh=$('#sheet');sendSignal(4).then(m=>{if(sh&&sh.close)sh.close();toast(m)})}
+  else if(a==='letgo')letGo();
+  else if(a==='occ'){LOC=t.dataset.v;t.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b===t))}
+  else if(a==='letter-save')saveLetter();
+  else if(a==='letter-open'){const l=SH.letters.find(x=>x.id===t.dataset.id);if(l){hap([8,50,8]);sheet(`<p class="mu sm" style="margin:0 0 .8rem">${esc(l.occasion)} · da ${esc(other())}</p><p style="font:1.25rem/1.55 var(--serif);white-space:pre-wrap;overflow-wrap:break-word;margin:0">${esc(l.body)}</p>`)}}
+  else if(a==='letter-del')delShared('letters',t.dataset.id);
+  else if(a==='meet-save')saveMeet();
+  else if(a==='meet-clear')clearMeet();
+  else if(a==='dq-save')saveAnswer();
+  else if(a==='sur-open'){const x=SH.sur.find(z=>z.id===t.dataset.id);if(x)openSur(x,0)}
+  else if(a==='sur-del')delShared('surprises',t.dataset.id);
+  else if(a==='mem-save')saveMemory();
+  else if(a==='mem-del')delShared('memories',t.dataset.id,1);
+  else if(a==='chat-clear')sheet('<p style="font:1.6rem var(--serif);margin:0 0 .5rem">Cancellare la conversazione?</p><p class="mu" style="margin:0 0 1rem">Sparisce da questo telefono e non si può recuperare.</p><button class="card cta tap" data-act="chat-clear-yes">Cancella</button>');
+  else if(a==='chat-clear-yes'){CHAT.length=0;saveChat();const sh=$('#sheet');if(sh&&sh.close)sh.close();const tp=stack[stack.length-1];if(tp&&tp.n==='parlami')tp.el.innerHTML=V.parlami();toast('Cancellata.')}
+  else if(a==='auth-mode'){AUTH.mode=t.dataset.v;AUTH.err='';renderAccountIfOpen()}
+  else if(a==='auth-submit')authSubmit();
+  else if(a==='logout')authLogout();
+  else if(a==='save-name')saveName();
+  else if(a==='pair-create')pairCall('create_couple');
+  else if(a==='pair-join')pairJoin();
+  else if(a==='pair-refresh')pairRefresh();
+  else if(a==='send')send($('#ci').value);
+  else if(a==='quick')send(t.dataset.q);
+  else if(a==='mood'){const m=MUSIC.actions[t.dataset.i];sheet(`<p style="font:1.7rem var(--serif);margin:0 0 .5rem">${m[0]}</p><p class="mu" style="margin:0 0 .6rem">${m[1]}</p><p class="mu sm" style="margin:0">Disponibile dopo il collegamento a Spotify.</p>`)}
+});
+
+/* ============ INTRO CINEMATOGRAFICA ============ */
+/* prima apertura: introduzione completa una sola volta; poi apertura immediata */
+const OB='uffa_ob';
+const seen=()=>{try{return localStorage.getItem(OB)==='1'}catch(e){return false}};
+const markSeen=()=>{try{localStorage.setItem(OB,'1')}catch(e){}};
+const OBL=['Parlare.','Mandare un segnale.','Giocare.','Ascoltare musica.','Condividere momenti.','Conservare ricordi.','Ricevere sorprese.','Rendere tutto a modo tuo.'];
+function quick(){app.innerHTML='';stack=[];const d=document.documentElement;d.classList.add('q');go('home',1);setTimeout(()=>d.classList.remove('q'),900)}
+function intro(force){
+  if(!force&&seen())return quick();
+  const o=document.createElement('div');o.id='intro';o.innerHTML='<p></p><span class="sk">Tocca per saltare</span>';document.body.append(o);
+  const p=o.firstChild,q=Math.max(K(),.6),L=[`Ciao, ${NAME}.`,'Questo posto è tuo.',OBL],H=[2400,4000,(OBL.length*.4+2.4)*1000];let i=0,done=false;
+  const end=()=>{if(done)return;done=true;markSeen();app.innerHTML='';stack=[];go('home',1);o.classList.add('gone');setTimeout(()=>o.remove(),1200)};
+  o.onclick=end;
+  setTimeout(function next(){
+    if(done)return;if(i>=L.length)return end();
+    const c=i,x=L[i++];
+    p.innerHTML=Array.isArray(x)?`<span class="cl">${x.map((t,j)=>`<i style="transition-delay:${(j*.4*q).toFixed(2)}s">${t}</i>`).join('')}</span>`:x;
+    void p.offsetWidth;p.className='show'+(c===1?' big':'');
+    setTimeout(()=>{if(done)return;p.className=c===1?'big':'';setTimeout(next,Math.max(1300,1400*q))},H[c]*q);
+  },900);
+}
+
+document.addEventListener('input',e=>{if(e.target.id!=='rq')return;const w=$('#rlw');w.classList.add('s');w.innerHTML=rlw(e.target.value,1)});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ci'){e.preventDefault();send(e.target.value)}});
+document.addEventListener('input',e=>{if(e.target.id!=='cc')return;S.pal='custom';S.accent=e.target.value;apply();save();
+  document.querySelectorAll('[data-set^="pal:"]').forEach(b=>b.classList.remove('on'));const c=$('#swc');c.classList.add('on');c.style.setProperty('--a',S.accent)});
+/* tastiera iOS: tiene la barra di scrittura sopra la tastiera */
+if(window.visualViewport){const vv=visualViewport,f=()=>{const kb=innerHeight-vv.height>120,pt=parseFloat(getComputedStyle(document.documentElement).paddingTop)||0;
+  document.documentElement.style.setProperty('--vh',kb?(vv.height-pt)+'px':'100%');if(kb)scrollTo(0,0)};vv.addEventListener('resize',f);vv.addEventListener('scroll',f)}
+const app=$('#app');
+apply();intro();
+</script>
+</body>
+</html>
